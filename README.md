@@ -18,3 +18,5 @@ camke ..
 make -j32
 ./test_dualarm
 ```
+
+![image](https://github.com/user-attachments/assets/b5e37a49-8f09-48ab-a368-5c2c09615bd1)
