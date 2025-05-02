@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MF0 version="1.1" packageUris="http://schema.mathworks.com/mf0/faultinfo_datamodel/R2021a">
+  <faultinfo.FaultContainerSet type="faultinfo.FaultContainerSet" uuid="da298336-391d-4105-8103-044671e16a2e">
+    <conditionals type="faultinfo.conditional.Conditional" uuid="35f5a874-6d15-4487-ae2c-75651459bd76">
+      <condition>x == true</condition>
+      <mustBeLogged>false</mustBeLogged>
+      <name>SampleConditional</name>
+      <resyncRefBlkID></resyncRefBlkID>
+      <resyncUUID>00000000-0000-0000-0000-000000000000</resyncUUID>
+      <symbols type="faultinfo.conditional.ExpressionSymbol" uuid="1741c98a-2807-4e59-94b1-7f8735b87ba2">
+        <expression>true</expression>
+        <name>x</name>
+      </symbols>
+    </conditionals>
+    <isEnabled>false</isEnabled>
+    <lastUpdatedAt>2025-05-02T23:29:17</lastUpdatedAt>
+    <modelName>TaskSpaceController</modelName>
+    <modelUUID>f6003616-df48-4266-bf3a-e0d61d2dcb79</modelUUID>
+  </faultinfo.FaultContainerSet>
+</MF0>

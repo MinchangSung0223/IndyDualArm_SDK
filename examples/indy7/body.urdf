@@ -1,0 +1,73 @@
+<?xml version="1.0" ?>
+<robot name="IndyDualArm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <material name="metal_grey">
+    <color rgba="0.5 0.5 0.5 1"/>
+  </material>
+  <material name="black">
+    <color rgba="0.2 0.2 0.2 1"/>
+  </material>  
+  <material name="metal_white_grey">
+    <color rgba="0.7 0.7 0.7 1"/>
+  </material>  
+	<link name="world"/>
+	<link name="body">
+		<inertial>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<mass value="1.59306955" />
+			<inertia ixx="+0.00572623" iyy="+0.00558959" izz="+0.00966674" ixy="+0.00000251" iyz="-0.00000014" ixz="-0.00011380"/>
+		</inertial>
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="meshes/dual_arm_body.stl" />
+			</geometry>
+		<material name="metal_grey"/>
+
+		</visual>
+
+		<!-- <collision>
+			<origin rpy="0 0 0" xyz="0 0 1.2675"/>
+			<geometry>
+				<box size="0.227 0.224 0.328"/>
+			</geometry>
+
+		</collision> -->
+		<!-- <collision>
+			<origin rpy="0 0 0" xyz="0 0 0.9242"/>
+			<geometry>
+				<cylinder radius="0.07" length="0.5"/>
+			</geometry>
+
+		</collision> -->
+		
+
+	</link>
+<link name="base">
+	<inertial>
+		<origin rpy="0 0 0" xyz="0 0 0"/>
+		<mass value="1.59306955" />
+		<inertia ixx="+0.00572623" iyy="+0.00558959" izz="+0.00966674" ixy="+0.00000251" iyz="-0.00000014" ixz="-0.00011380"/>
+	</inertial>
+	<visual>
+		<origin rpy="0 0 0" xyz="0 0 0"/>
+		<geometry>
+			<mesh filename="meshes/mobile_base.stl" />
+		</geometry>
+	<material name="black"/>
+
+	</visual>
+
+</link>
+	
+ 	<joint name="world_fixed" type="fixed">
+ 		<origin rpy="0 0 0" xyz="0 0 0"/>
+ 		<parent link="world"/>
+		<child link="body"/>
+ 	</joint>
+ 
+	 <joint name="base_fixed" type="fixed">
+		<origin rpy="0 0 0" xyz="0 0 0"/>
+		<parent link="world"/>
+	   <child link="base"/>
+	</joint>
+</robot>

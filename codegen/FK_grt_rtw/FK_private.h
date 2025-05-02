@@ -1,0 +1,43 @@
+/*
+ * FK_private.h
+ *
+ * Academic License - for use in teaching, academic research, and meeting
+ * course requirements at degree granting institutions only.  Not for
+ * government, commercial, or other organizational use.
+ *
+ * Code generation for model "FK".
+ *
+ * Model version              : 1.8
+ * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
+ * C source code generated on : Fri May  2 20:22:47 2025
+ *
+ * Target selection: grt.tlc
+ * Note: GRT includes extra infrastructure and instrumentation for prototyping
+ * Embedded hardware selection: Intel->x86-64 (Linux 64)
+ * Code generation objectives: Unspecified
+ * Validation result: Not run
+ */
+
+#ifndef FK_private_h_
+#define FK_private_h_
+#include "rtwtypes.h"
+#include "builtin_typeid_types.h"
+#include "multiword_types.h"
+#include "FK.h"
+#include "FK_types.h"
+#include "rtw_continuous.h"
+#include "rtw_solver.h"
+
+/* Private macros used by the generated code to access rtModel */
+#ifndef rtmSetTFinal
+#define rtmSetTFinal(rtm, val)         ((rtm)->Timing.tFinal = (val))
+#endif
+
+/* Exported functions */
+extern void FK_exp6(const real_T lambda[6], real_T T[16]);
+extern void FK_MATLABFunction1(const real_T rtu_q[12], B_MATLABFunction1_FK_T
+  *localB);
+extern void FK_MATLABFunction5(const real_T rtu_Jb[36], const real_T rtu_qdot[6],
+  B_MATLABFunction5_FK_T *localB);
+
+#endif                                 /* FK_private_h_ */

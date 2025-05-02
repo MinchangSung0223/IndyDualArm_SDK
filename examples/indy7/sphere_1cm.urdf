@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<robot name="axis">
+  <link name="world"/>
+  <link name="x_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+      	 <sphere radius="0.04"/>
+      </geometry>
+       <material name="red">
+        <color rgba="0.0 0.0 0 1"/>
+      </material>
+    </visual>
+  </link>
+  
+ <joint name="x_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="world"/>
+    <child link="x_link"/>
+ </joint>
+</robot>
+
+

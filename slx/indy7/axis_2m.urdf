@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<robot name="axis222">
+  <link name="x_link">
+    <visual>
+      <origin rpy="0 1.5708 0" xyz="1 0 0"/>
+      <geometry>
+				<cylinder radius="0.002" length="2.0"/>
+      </geometry>
+       <material name="red">
+        <color rgba="1 0.0 0 1"/>
+      </material>
+    </visual>
+  </link>
+</robot>
