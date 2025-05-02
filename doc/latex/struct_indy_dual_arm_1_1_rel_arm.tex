@@ -1,0 +1,50 @@
+\hypertarget{struct_indy_dual_arm_1_1_rel_arm}{}\doxysection{Indy\+Dual\+Arm\+::Rel\+Arm Struct Reference}
+\label{struct_indy_dual_arm_1_1_rel_arm}\index{IndyDualArm::RelArm@{IndyDualArm::RelArm}}
+
+
+두 팔(12 Do\+F) 기준 {\itshape 동역학 / 기구학} 상태  
+
+
+
+
+{\ttfamily \#include $<$Indy\+Dual\+Arm.\+hpp$>$}
+
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_arm_a957263b8b2698533a89dc7c6d72cdb34}\label{struct_indy_dual_arm_1_1_rel_arm_a957263b8b2698533a89dc7c6d72cdb34}} 
+Eigen\+::\+Matrix$<$ double, 12, 12 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_arm_a957263b8b2698533a89dc7c6d72cdb34}{M}}
+\begin{DoxyCompactList}\small\item\em 관성행렬 $M(q)$ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_arm_a5d814e991010aaa8a20b9ca8e3a821b4}\label{struct_indy_dual_arm_1_1_rel_arm_a5d814e991010aaa8a20b9ca8e3a821b4}} 
+Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_arm_a5d814e991010aaa8a20b9ca8e3a821b4}{c}}
+\begin{DoxyCompactList}\small\item\em 코리올리/원심 $c(q,\dot q)$ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_arm_af5f109482f5af6322dbeb9aafb0cef30}\label{struct_indy_dual_arm_1_1_rel_arm_af5f109482f5af6322dbeb9aafb0cef30}} 
+Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_arm_af5f109482f5af6322dbeb9aafb0cef30}{g}}
+\begin{DoxyCompactList}\small\item\em 중력항 $g(q)$ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_arm_a00e69e5f7b805be339fc21fcac1ceb8a}\label{struct_indy_dual_arm_1_1_rel_arm_a00e69e5f7b805be339fc21fcac1ceb8a}} 
+Eigen\+::\+Matrix4d \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_arm_a00e69e5f7b805be339fc21fcac1ceb8a}{T}}
+\begin{DoxyCompactList}\small\item\em 상대 HT $T_{\mathrm{rel}}$ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_arm_a9c97a0cfcbb8e16101955f6417b21341}\label{struct_indy_dual_arm_1_1_rel_arm_a9c97a0cfcbb8e16101955f6417b21341}} 
+Vector6d \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_arm_a9c97a0cfcbb8e16101955f6417b21341}{V}}
+\begin{DoxyCompactList}\small\item\em 상대 twist \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_arm_a9b8e4a08189bea700b58365649bb6f17}\label{struct_indy_dual_arm_1_1_rel_arm_a9b8e4a08189bea700b58365649bb6f17}} 
+Eigen\+::\+Matrix$<$ double, 6, 12 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_arm_a9b8e4a08189bea700b58365649bb6f17}{J}}
+\begin{DoxyCompactList}\small\item\em 상대 Jacobian \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_arm_a74a69a7776f5ead36d4327738797e9f7}\label{struct_indy_dual_arm_1_1_rel_arm_a74a69a7776f5ead36d4327738797e9f7}} 
+Eigen\+::\+Matrix$<$ double, 6, 12 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_arm_a74a69a7776f5ead36d4327738797e9f7}{Jdot}}
+\begin{DoxyCompactList}\small\item\em $\dot J$ \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+두 팔(12 Do\+F) 기준 {\itshape 동역학 / 기구학} 상태 
+
+
+\begin{DoxyItemize}
+\item {\ttfamily M}, {\ttfamily c}, {\ttfamily g} \+: 12 DoF 전관절 관성·코리올리·중력 ~\newline
+
+\item 나머지 필드 \+: 좌·우 T\+CP 사이 {\bfseries{상대}} 자세·twist·야코비안 
+\end{DoxyItemize}
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/sung/robot\+\_\+ws/\+Indy\+Dual\+Arm\+\_\+\+S\+D\+K/include/Indy\+Dual\+Arm.\+hpp\end{DoxyCompactItemize}

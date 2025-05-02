@@ -1,0 +1,7 @@
+<map id="IndyDualArm" name="IndyDualArm">
+<area shape="rect" id="node1" title="12&#45;DoF DualArm 동역학/기구학" alt="" coords="308,109,415,136"/>
+<area shape="rect" id="node2" href="$struct_indy_dual_arm_1_1_rel_arm.html" title="두 팔(12 DoF) 기준 동역학 / 기구학 상태" alt="" coords="5,5,168,32"/>
+<area shape="rect" id="node3" href="$struct_indy_dual_arm_1_1_rel_des.html" title="두 팔(12 DoF) 기준 궤적(Desired) 묶음" alt="" coords="193,5,354,32"/>
+<area shape="rect" id="node4" href="$struct_indy_dual_arm_1_1_arm.html" title="단일 팔(6&#45;DoF) 동역학/기구학 결과 구조체" alt="" coords="378,5,521,32"/>
+<area shape="rect" id="node5" href="$struct_indy_dual_arm_1_1_des.html" title="목표 궤적(desired) 묶음 (Joint&#45; / Task&#45;space 공용)" alt="" coords="545,5,685,32"/>
+</map>

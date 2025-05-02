@@ -1,0 +1,45 @@
+\hypertarget{struct_indy_dual_arm_1_1_arm}{}\doxysection{Indy\+Dual\+Arm\+::Arm Struct Reference}
+\label{struct_indy_dual_arm_1_1_arm}\index{IndyDualArm::Arm@{IndyDualArm::Arm}}
+
+
+단일 팔(6-\/DoF) 동역학/기구학 결과 구조체  
+
+
+
+
+{\ttfamily \#include $<$Indy\+Dual\+Arm.\+hpp$>$}
+
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_arm_aa1159606505f7f7e00a74f9efdec3317}\label{struct_indy_dual_arm_1_1_arm_aa1159606505f7f7e00a74f9efdec3317}} 
+Eigen\+::\+Matrix$<$ double, 6, 6 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_arm_aa1159606505f7f7e00a74f9efdec3317}{M}}
+\begin{DoxyCompactList}\small\item\em 관절질량행렬 $M(q)$ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_arm_a304d89de23c16ef632826886bd74ece5}\label{struct_indy_dual_arm_1_1_arm_a304d89de23c16ef632826886bd74ece5}} 
+Eigen\+::\+Matrix$<$ double, 6, 1 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_arm_a304d89de23c16ef632826886bd74ece5}{c}}
+\begin{DoxyCompactList}\small\item\em 코리올리/원심 항 $c(q,\dot q)$ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_arm_a7a7a611bae05ee55d9f022bd223956b2}\label{struct_indy_dual_arm_1_1_arm_a7a7a611bae05ee55d9f022bd223956b2}} 
+Eigen\+::\+Matrix$<$ double, 6, 1 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_arm_a7a7a611bae05ee55d9f022bd223956b2}{g}}
+\begin{DoxyCompactList}\small\item\em 중력 토크 $g(q)$ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_arm_afd07bff0614c4dfe03db8c074d7d3c74}\label{struct_indy_dual_arm_1_1_arm_afd07bff0614c4dfe03db8c074d7d3c74}} 
+Eigen\+::\+Matrix4d \mbox{\hyperlink{struct_indy_dual_arm_1_1_arm_afd07bff0614c4dfe03db8c074d7d3c74}{T}}
+\begin{DoxyCompactList}\small\item\em T\+CP 좌표계 -\/ base 변환 (S\+E3) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_arm_af0715aac7d91af6e3f61ef11b83e8eb5}\label{struct_indy_dual_arm_1_1_arm_af0715aac7d91af6e3f61ef11b83e8eb5}} 
+Vector6d \mbox{\hyperlink{struct_indy_dual_arm_1_1_arm_af0715aac7d91af6e3f61ef11b83e8eb5}{V}}
+\begin{DoxyCompactList}\small\item\em T\+CP twist $[v;\,\omega]$. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_arm_ae7e4d166de2e552f9ea06c6d1235a186}\label{struct_indy_dual_arm_1_1_arm_ae7e4d166de2e552f9ea06c6d1235a186}} 
+Eigen\+::\+Matrix$<$ double, 6, 6 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_arm_ae7e4d166de2e552f9ea06c6d1235a186}{J}}
+\begin{DoxyCompactList}\small\item\em body Jacobian \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_arm_a5eb971d8b6b07b9a347d93f81591dc4d}\label{struct_indy_dual_arm_1_1_arm_a5eb971d8b6b07b9a347d93f81591dc4d}} 
+Eigen\+::\+Matrix$<$ double, 6, 6 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_arm_a5eb971d8b6b07b9a347d93f81591dc4d}{Jdot}}
+\begin{DoxyCompactList}\small\item\em $\dot J_b$ \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+단일 팔(6-\/DoF) 동역학/기구학 결과 구조체 
+
+F\+K/\+ID 계산 후 {\bfseries{왼팔(l)$\ast$$\ast$·$\ast$$\ast$오른팔(r)}} 모두가 이 형식을 사용합니다. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/sung/robot\+\_\+ws/\+Indy\+Dual\+Arm\+\_\+\+S\+D\+K/include/Indy\+Dual\+Arm.\+hpp\end{DoxyCompactItemize}

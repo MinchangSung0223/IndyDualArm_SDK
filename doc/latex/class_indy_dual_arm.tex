@@ -1,0 +1,212 @@
+\hypertarget{class_indy_dual_arm}{}\doxysection{Indy\+Dual\+Arm Class Reference}
+\label{class_indy_dual_arm}\index{IndyDualArm@{IndyDualArm}}
+
+
+12-\/DoF Dual\+Arm 동역학/기구학  
+
+
+
+
+{\ttfamily \#include $<$Indy\+Dual\+Arm.\+hpp$>$}
+
+
+
+Collaboration diagram for Indy\+Dual\+Arm\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_indy_dual_arm__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_indy_dual_arm_1_1_arm}{Arm}}
+\begin{DoxyCompactList}\small\item\em 단일 팔(6-\/DoF) 동역학/기구학 결과 구조체 \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_indy_dual_arm_1_1_des}{Des}}
+\begin{DoxyCompactList}\small\item\em 목표 궤적(desired) 묶음 (Joint-\/ / Task-\/space 공용) \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_arm}{Rel\+Arm}}
+\begin{DoxyCompactList}\small\item\em 두 팔(12 Do\+F) 기준 {\itshape 동역학 / 기구학} 상태 \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_des}{Rel\+Des}}
+\begin{DoxyCompactList}\small\item\em 두 팔(12 Do\+F) 기준 {\itshape 궤적(\+Desired)} 묶음 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_indy_dual_arm_ac792ed56142d5650251b0c4962987a97}\label{class_indy_dual_arm_ac792ed56142d5650251b0c4962987a97}} 
+void \mbox{\hyperlink{class_indy_dual_arm_ac792ed56142d5650251b0c4962987a97}{initialize}} ()
+\begin{DoxyCompactList}\small\item\em F\+D/\+F\+K/\+I\+D/\+J\+S\+Traj/\+T\+S\+Traj 모두 $\ast$\+\_\+initialize() \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_ae254f9e49de38bf949e28e21c2be46bd}\label{class_indy_dual_arm_ae254f9e49de38bf949e28e21c2be46bd}} 
+void \mbox{\hyperlink{class_indy_dual_arm_ae254f9e49de38bf949e28e21c2be46bd}{initialize}} (const Eigen\+::\+Vector\+Xd \&\mbox{\hyperlink{class_indy_dual_arm_a63388bb8a33004df784b22350cc7209c}{q\+\_\+init}})
+\begin{DoxyCompactList}\small\item\em F\+D/\+F\+K/\+I\+D/\+J\+S\+Traj/\+T\+S\+Traj 모두 $\ast$\+\_\+initialize() \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_aa815060d39dbbd716532610db83018ce}\label{class_indy_dual_arm_aa815060d39dbbd716532610db83018ce}} 
+void {\bfseries initialize} (const Eigen\+::\+Vector\+Xd \&q0, const Eigen\+::\+Matrix$<$ double, 6, 7 $>$ \&\mbox{\hyperlink{class_indy_dual_arm_a932e8eab6ef89861bcb42fb83bab053e}{lambda\+\_\+l}}, const Eigen\+::\+Matrix$<$ double, 6, 7 $>$ \&\mbox{\hyperlink{class_indy_dual_arm_a332b585057b643aab9c6a43dbc1b8838}{lambda\+\_\+r}}, const Eigen\+::\+Matrix$<$ double, 6, 13 $>$ \&\mbox{\hyperlink{class_indy_dual_arm_a7fd0d6b93af0ef2445a1392ca231805d}{lambda\+\_\+lr}})
+\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a2780c716388b5ffa0768e4dbd9471f43}\label{class_indy_dual_arm_a2780c716388b5ffa0768e4dbd9471f43}} 
+void {\bfseries initialize} (const Eigen\+::\+Vector\+Xd \&q0, const Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \&\mbox{\hyperlink{class_indy_dual_arm_a607f3488b303b70f90b42c39ebefae33}{q\+\_\+min}}, const Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \&\mbox{\hyperlink{class_indy_dual_arm_a3bedeb830de237244db5f4856c5aaeff}{q\+\_\+max}}, const Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \&\mbox{\hyperlink{class_indy_dual_arm_a0b179aff50ce444ee60bea718b688029}{qdot\+\_\+min}}, const Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \&\mbox{\hyperlink{class_indy_dual_arm_a81b6f37fc2b757b545933d21d0182174}{qdot\+\_\+max}})
+\item 
+\mbox{\Hypertarget{class_indy_dual_arm_af7ee57ddc726cd1b095f076fe9b80dee}\label{class_indy_dual_arm_af7ee57ddc726cd1b095f076fe9b80dee}} 
+void \mbox{\hyperlink{class_indy_dual_arm_af7ee57ddc726cd1b095f076fe9b80dee}{terminate}} ()
+\begin{DoxyCompactList}\small\item\em 위 모듈 전부 $\ast$\+\_\+terminate() \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_aebd487b9dc4f3fa1a49dcc23ff99860f}\label{class_indy_dual_arm_aebd487b9dc4f3fa1a49dcc23ff99860f}} 
+void {\bfseries forward\+Dynamics} (const Eigen\+::\+Vector\+Xd \&tau, Eigen\+::\+Vector\+Xd \&q\+\_\+next, Eigen\+::\+Vector\+Xd \&qd\+\_\+next, const Vector6d \&Fext\+\_\+r=Vector6d\+::\+Zero(), const Vector6d \&Fext\+\_\+l=Vector6d\+::\+Zero())
+\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a7c036c09401cf6d8f52e6ac7a3156bf2}\label{class_indy_dual_arm_a7c036c09401cf6d8f52e6ac7a3156bf2}} 
+void {\bfseries forward\+Kinematics} (const Eigen\+::\+Vector\+Xd \&q, const Eigen\+::\+Vector\+Xd \&qdot)
+\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a7fe2fd3628db0479efc66c663d442fc7}\label{class_indy_dual_arm_a7fe2fd3628db0479efc66c663d442fc7}} 
+void {\bfseries inverse\+Dynamics} (const Eigen\+::\+Vector\+Xd \&q, const Eigen\+::\+Vector\+Xd \&qdot)
+\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a3a57a445ffad834b6bcfa8f67a9c6a9f}\label{class_indy_dual_arm_a3a57a445ffad834b6bcfa8f67a9c6a9f}} 
+void {\bfseries joint\+Space\+Trajectory} (double t\+\_\+sec, const Vector6d \&q\+\_\+start, const Vector6d \&q\+\_\+end, double T0, double Tf, \mbox{\hyperlink{struct_indy_dual_arm_1_1_des}{Des}} \&des)
+\item 
+void \mbox{\hyperlink{class_indy_dual_arm_ad19a758e7c2f7db17758a6c0c76fff33}{set\+Traj}} (const \mbox{\hyperlink{struct_indy_dual_arm_1_1_des}{Des}} \&\mbox{\hyperlink{class_indy_dual_arm_af906246ab05d7201134988f38083c2f8}{des\+\_\+l}}, const \mbox{\hyperlink{struct_indy_dual_arm_1_1_des}{Des}} \&\mbox{\hyperlink{class_indy_dual_arm_a4d5922983634faef19e42f1e9905be88}{des\+\_\+r}})
+\begin{DoxyCompactList}\small\item\em des\+\_\+l, des\+\_\+r 궤적을 통합하여 des\+\_\+lr (12-\/DoF)로 설정합니다. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_aca7e53e2604bfdd7d8cc83d8b7e1a720}\label{class_indy_dual_arm_aca7e53e2604bfdd7d8cc83d8b7e1a720}} 
+void {\bfseries task\+Space\+Trajectory} (double t\+\_\+sec, const Eigen\+::\+Matrix4d \&T\+\_\+start, const Eigen\+::\+Matrix4d \&T\+\_\+end, double T0, double Tf, \mbox{\hyperlink{struct_indy_dual_arm_1_1_des}{Des}} \&des)
+\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{class_indy_dual_arm_a59d7169aa0fcd746ad569feeda3b8bcb}{hinf\+Controller}} (const Eigen\+::\+Vector\+Xd \&q, const Eigen\+::\+Vector\+Xd \&qdot, const Eigen\+::\+Vector\+Xd \&K)
+\begin{DoxyCompactList}\small\item\em H∞ controller에 기반한 joint torque 계산 \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{class_indy_dual_arm_a2865f79c2e0e7fbf66e4e185e67ac71d}{task\+Space\+Controller}} (const Eigen\+::\+Vector\+Xd \&q, const Eigen\+::\+Vector\+Xd \&qdot, double dt, const Eigen\+::\+Vector\+Xd \&Task\+Kp, const Eigen\+::\+Vector\+Xd \&Task\+Kv, const Eigen\+::\+Vector2d \&b0, const Eigen\+::\+Vector2d \&a, const Eigen\+::\+Vector\+Xd \&HinfK)
+\begin{DoxyCompactList}\small\item\em Task-\/space controller (S\+PD + QP) 기반 토크 계산 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a932e8eab6ef89861bcb42fb83bab053e}\label{class_indy_dual_arm_a932e8eab6ef89861bcb42fb83bab053e}} 
+Eigen\+::\+Matrix$<$ double, 6, 7 $>$ \mbox{\hyperlink{class_indy_dual_arm_a932e8eab6ef89861bcb42fb83bab053e}{lambda\+\_\+l}}
+\begin{DoxyCompactList}\small\item\em Local\+P\+OE screw axis (left) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a332b585057b643aab9c6a43dbc1b8838}\label{class_indy_dual_arm_a332b585057b643aab9c6a43dbc1b8838}} 
+Eigen\+::\+Matrix$<$ double, 6, 7 $>$ \mbox{\hyperlink{class_indy_dual_arm_a332b585057b643aab9c6a43dbc1b8838}{lambda\+\_\+r}}
+\begin{DoxyCompactList}\small\item\em Local\+P\+OE screw axis (right) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a7fd0d6b93af0ef2445a1392ca231805d}\label{class_indy_dual_arm_a7fd0d6b93af0ef2445a1392ca231805d}} 
+Eigen\+::\+Matrix$<$ double, 6, 13 $>$ \mbox{\hyperlink{class_indy_dual_arm_a7fd0d6b93af0ef2445a1392ca231805d}{lambda\+\_\+lr}}
+\begin{DoxyCompactList}\small\item\em Local\+P\+OE screw axis (full) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a63388bb8a33004df784b22350cc7209c}\label{class_indy_dual_arm_a63388bb8a33004df784b22350cc7209c}} 
+Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \mbox{\hyperlink{class_indy_dual_arm_a63388bb8a33004df784b22350cc7209c}{q\+\_\+init}}
+\begin{DoxyCompactList}\small\item\em 초기 관절각 \mbox{[}rad\mbox{]} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a607f3488b303b70f90b42c39ebefae33}\label{class_indy_dual_arm_a607f3488b303b70f90b42c39ebefae33}} 
+Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \mbox{\hyperlink{class_indy_dual_arm_a607f3488b303b70f90b42c39ebefae33}{q\+\_\+min}}
+\begin{DoxyCompactList}\small\item\em 관절 하한 \mbox{[}rad\mbox{]} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a3bedeb830de237244db5f4856c5aaeff}\label{class_indy_dual_arm_a3bedeb830de237244db5f4856c5aaeff}} 
+Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \mbox{\hyperlink{class_indy_dual_arm_a3bedeb830de237244db5f4856c5aaeff}{q\+\_\+max}}
+\begin{DoxyCompactList}\small\item\em 관절 상한 \mbox{[}rad\mbox{]} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a0b179aff50ce444ee60bea718b688029}\label{class_indy_dual_arm_a0b179aff50ce444ee60bea718b688029}} 
+Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \mbox{\hyperlink{class_indy_dual_arm_a0b179aff50ce444ee60bea718b688029}{qdot\+\_\+min}}
+\begin{DoxyCompactList}\small\item\em 속도 하한 \mbox{[}rad/s\mbox{]} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a81b6f37fc2b757b545933d21d0182174}\label{class_indy_dual_arm_a81b6f37fc2b757b545933d21d0182174}} 
+Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \mbox{\hyperlink{class_indy_dual_arm_a81b6f37fc2b757b545933d21d0182174}{qdot\+\_\+max}}
+\begin{DoxyCompactList}\small\item\em 속도 상한 \mbox{[}rad/s\mbox{]} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a31030b7a0f6bdb7993fa38f2413732f7}\label{class_indy_dual_arm_a31030b7a0f6bdb7993fa38f2413732f7}} 
+\mbox{\hyperlink{struct_indy_dual_arm_1_1_arm}{Arm}} \mbox{\hyperlink{class_indy_dual_arm_a31030b7a0f6bdb7993fa38f2413732f7}{l}}
+\begin{DoxyCompactList}\small\item\em 왼팔 동역학/기구학 결과 \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_aba4ba339e074a4c64fa8eeccc8495404}\label{class_indy_dual_arm_aba4ba339e074a4c64fa8eeccc8495404}} 
+\mbox{\hyperlink{struct_indy_dual_arm_1_1_arm}{Arm}} \mbox{\hyperlink{class_indy_dual_arm_aba4ba339e074a4c64fa8eeccc8495404}{r}}
+\begin{DoxyCompactList}\small\item\em 오른팔 동역학/기구학 결과 \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a2e2cc9ef54857b1200f9072739b30a77}\label{class_indy_dual_arm_a2e2cc9ef54857b1200f9072739b30a77}} 
+\mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_arm}{Rel\+Arm}} \mbox{\hyperlink{class_indy_dual_arm_a2e2cc9ef54857b1200f9072739b30a77}{lr}}
+\begin{DoxyCompactList}\small\item\em 전체 12-\/DoF 동역학/기구학 결과 \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_af906246ab05d7201134988f38083c2f8}\label{class_indy_dual_arm_af906246ab05d7201134988f38083c2f8}} 
+\mbox{\hyperlink{struct_indy_dual_arm_1_1_des}{Des}} \mbox{\hyperlink{class_indy_dual_arm_af906246ab05d7201134988f38083c2f8}{des\+\_\+l}}
+\begin{DoxyCompactList}\small\item\em 왼팔 목표 궤적 \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a4d5922983634faef19e42f1e9905be88}\label{class_indy_dual_arm_a4d5922983634faef19e42f1e9905be88}} 
+\mbox{\hyperlink{struct_indy_dual_arm_1_1_des}{Des}} \mbox{\hyperlink{class_indy_dual_arm_a4d5922983634faef19e42f1e9905be88}{des\+\_\+r}}
+\begin{DoxyCompactList}\small\item\em 오른팔 목표 궤적 \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_indy_dual_arm_a9baf78d6ab0d3460204cb688dd05c1a3}\label{class_indy_dual_arm_a9baf78d6ab0d3460204cb688dd05c1a3}} 
+\mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_des}{Rel\+Des}} \mbox{\hyperlink{class_indy_dual_arm_a9baf78d6ab0d3460204cb688dd05c1a3}{des\+\_\+lr}}
+\begin{DoxyCompactList}\small\item\em 통합 12-\/DoF 목표 궤적 \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+12-\/DoF Dual\+Arm 동역학/기구학 
+
+주요 기능
+\begin{DoxyItemize}
+\item Forward / Inverse Dynamics
+\item Forward Kinematics (P\+OE)
+\item Joint/\+Task-\/space trajectory generator
+\item H∞ / QP 기반 컨트롤러
+\item slx폴더의 simulink 파일들을 기반으로 c code generation. 사용 예시는 examples/test\+\_\+dualarm.\+cpp 참고. 
+\end{DoxyItemize}
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_indy_dual_arm_a59d7169aa0fcd746ad569feeda3b8bcb}\label{class_indy_dual_arm_a59d7169aa0fcd746ad569feeda3b8bcb}} 
+\index{IndyDualArm@{IndyDualArm}!hinfController@{hinfController}}
+\index{hinfController@{hinfController}!IndyDualArm@{IndyDualArm}}
+\doxysubsubsection{\texorpdfstring{hinfController()}{hinfController()}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd Indy\+Dual\+Arm\+::hinf\+Controller (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{q,  }\item[{const Eigen\+::\+Vector\+Xd \&}]{qdot,  }\item[{const Eigen\+::\+Vector\+Xd \&}]{K }\end{DoxyParamCaption})}
+
+
+
+H∞ controller에 기반한 joint torque 계산 
+
+내부적으로 {\ttfamily Hinf\+Controller\+\_\+step()} 을 호출하며, 선형 피드백 게인 K를 인자로 받습니다. 입력은 ID 결과 ({\ttfamily this-\/$>$lr})와 현재 q, qdot, des\+\_\+lr 를 기반으로 합니다. $\tau = M \qddot_{ref} + c(q,qdot_{ref})+g +tau_ref$
+
+
+\begin{DoxyParams}{Parameters}
+{\em q} & 현재 관절각 (12×1) \\
+\hline
+{\em qdot} & 현재 관절속도 (12×1) \\
+\hline
+{\em K} & H∞ 피드백 게인 (12×1) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+토크 출력 τ (12×1) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_indy_dual_arm_ad19a758e7c2f7db17758a6c0c76fff33}\label{class_indy_dual_arm_ad19a758e7c2f7db17758a6c0c76fff33}} 
+\index{IndyDualArm@{IndyDualArm}!setTraj@{setTraj}}
+\index{setTraj@{setTraj}!IndyDualArm@{IndyDualArm}}
+\doxysubsubsection{\texorpdfstring{setTraj()}{setTraj()}}
+{\footnotesize\ttfamily void Indy\+Dual\+Arm\+::set\+Traj (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_indy_dual_arm_1_1_des}{Des}} \&}]{des\+\_\+l,  }\item[{const \mbox{\hyperlink{struct_indy_dual_arm_1_1_des}{Des}} \&}]{des\+\_\+r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+des\+\_\+l, des\+\_\+r 궤적을 통합하여 des\+\_\+lr (12-\/DoF)로 설정합니다. 
+
+이 함수는 H∞, Task\+Space\+Controller 등의 joint-\/level 입력을 준비할 때 사용됩니다.
+
+
+\begin{DoxyParams}{Parameters}
+{\em des\+\_\+l} & 왼팔 궤적 (q, qdot, qddot) \\
+\hline
+{\em des\+\_\+r} & 오른팔 궤적 (q, qdot, qddot) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_indy_dual_arm_a2865f79c2e0e7fbf66e4e185e67ac71d}\label{class_indy_dual_arm_a2865f79c2e0e7fbf66e4e185e67ac71d}} 
+\index{IndyDualArm@{IndyDualArm}!taskSpaceController@{taskSpaceController}}
+\index{taskSpaceController@{taskSpaceController}!IndyDualArm@{IndyDualArm}}
+\doxysubsubsection{\texorpdfstring{taskSpaceController()}{taskSpaceController()}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd Indy\+Dual\+Arm\+::task\+Space\+Controller (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{q,  }\item[{const Eigen\+::\+Vector\+Xd \&}]{qdot,  }\item[{double}]{dt,  }\item[{const Eigen\+::\+Vector\+Xd \&}]{Task\+Kp,  }\item[{const Eigen\+::\+Vector\+Xd \&}]{Task\+Kv,  }\item[{const Eigen\+::\+Vector2d \&}]{b0,  }\item[{const Eigen\+::\+Vector2d \&}]{a,  }\item[{const Eigen\+::\+Vector\+Xd \&}]{HinfK }\end{DoxyParamCaption})}
+
+
+
+Task-\/space controller (S\+PD + QP) 기반 토크 계산 
+
+{\ttfamily Task\+Space\+Controller\+\_\+step()} 호출. FK, Trajectory가 선행되어야 함. 내부적으로 l, r, lr, des\+\_\+l, des\+\_\+r, des\+\_\+lr 등의 필드를 사용합니다.
+
+
+\begin{DoxyParams}{Parameters}
+{\em q} & 현재 관절각 (12×1) \\
+\hline
+{\em qdot} & 현재 관절속도 (12×1) \\
+\hline
+{\em dt} & 제어 루프 주기 \mbox{[}sec\mbox{]} \\
+\hline
+{\em Task\+Kp} & 태스크 공간 P 게인 (12×1) \\
+\hline
+{\em Task\+Kv} & 태스크 공간 D 게인 (12×1) \\
+\hline
+{\em b0} & Damping coeff \\
+\hline
+{\em a} & Damping coeff \\
+\hline
+{\em HinfK} & H∞ Gain \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+토크 출력 τ (12×1) 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/sung/robot\+\_\+ws/\+Indy\+Dual\+Arm\+\_\+\+S\+D\+K/include/Indy\+Dual\+Arm.\+hpp\end{DoxyCompactItemize}

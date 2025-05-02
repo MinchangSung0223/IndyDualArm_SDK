@@ -1,0 +1,43 @@
+\hypertarget{struct_indy_dual_arm_1_1_rel_des}{}\doxysection{Indy\+Dual\+Arm\+::Rel\+Des Struct Reference}
+\label{struct_indy_dual_arm_1_1_rel_des}\index{IndyDualArm::RelDes@{IndyDualArm::RelDes}}
+
+
+두 팔(12 Do\+F) 기준 {\itshape 궤적(\+Desired)} 묶음  
+
+
+
+
+{\ttfamily \#include $<$Indy\+Dual\+Arm.\+hpp$>$}
+
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_des_a068057b16509d5389f1a5cc7d8fa91d3}\label{struct_indy_dual_arm_1_1_rel_des_a068057b16509d5389f1a5cc7d8fa91d3}} 
+Eigen\+::\+Matrix4d \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_des_a068057b16509d5389f1a5cc7d8fa91d3}{T}}
+\begin{DoxyCompactList}\small\item\em 좌-\/우 T\+CP 상대 HT $T_{\mathrm{rel}}(t)$ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_des_ac9cbc09ec1ff6e0dd1b2eddb3fd97f6b}\label{struct_indy_dual_arm_1_1_rel_des_ac9cbc09ec1ff6e0dd1b2eddb3fd97f6b}} 
+Vector6d \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_des_ac9cbc09ec1ff6e0dd1b2eddb3fd97f6b}{V}}
+\begin{DoxyCompactList}\small\item\em 상대 twist $V_{\mathrm{rel}}(t)$ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_des_aa707351e4ff4caad67e0045590deeef0}\label{struct_indy_dual_arm_1_1_rel_des_aa707351e4ff4caad67e0045590deeef0}} 
+Vector6d \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_des_aa707351e4ff4caad67e0045590deeef0}{Vdot}}
+\begin{DoxyCompactList}\small\item\em 상대 twist-\/dot $\dot V_{\mathrm{rel}}(t)$ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_des_a543597af60ae60a0036a95b10044eaba}\label{struct_indy_dual_arm_1_1_rel_des_a543597af60ae60a0036a95b10044eaba}} 
+Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_des_a543597af60ae60a0036a95b10044eaba}{q}}
+\begin{DoxyCompactList}\small\item\em $q_\text{des}(t)$ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_des_a852202e9e0cec3db3b36354681b70dbb}\label{struct_indy_dual_arm_1_1_rel_des_a852202e9e0cec3db3b36354681b70dbb}} 
+Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_des_a852202e9e0cec3db3b36354681b70dbb}{qdot}}
+\begin{DoxyCompactList}\small\item\em $\dot q_\text{des}(t)$ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_indy_dual_arm_1_1_rel_des_a41d32bb0fc01e422783567f2777f91d9}\label{struct_indy_dual_arm_1_1_rel_des_a41d32bb0fc01e422783567f2777f91d9}} 
+Eigen\+::\+Matrix$<$ double, 12, 1 $>$ \mbox{\hyperlink{struct_indy_dual_arm_1_1_rel_des_a41d32bb0fc01e422783567f2777f91d9}{qddot}}
+\begin{DoxyCompactList}\small\item\em $\ddot q_\text{des}(t)$ \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+두 팔(12 Do\+F) 기준 {\itshape 궤적(\+Desired)} 묶음 
+
+‣ 모든 항목은 “좌(0 – 5) ∥ 우(6 – 11)” 관절을 하나로 묶어 12 × 1 / 12 × 12 형식을 따릅니다. ~\newline
+ ‣ Task-\/space 항목은 {\itshape 좌·우 T\+CP 사이의 상대 자세 · twist}를 의미합니다. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/sung/robot\+\_\+ws/\+Indy\+Dual\+Arm\+\_\+\+S\+D\+K/include/Indy\+Dual\+Arm.\+hpp\end{DoxyCompactItemize}
