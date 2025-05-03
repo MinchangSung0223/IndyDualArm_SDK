@@ -1,0 +1,74 @@
+#--------------------------- Tool Specifications -------------------------
+#
+# Modify the following macros to reflect the tools you wish to use for
+# compiling and linking your code.
+#
+CC = "C:\Program Files\MATLAB\R2024b\bin\win64\mex.exe" -R2018a
+LD = $(CC)
+ 
+MODEL     = FK
+TARGET      = cgxe
+MODULE_SRCS   = m_LJRV8xaUaAupvDb6yXgyhD.c m_4dIWKdXw9f42uXOYIbe9fE.c m_lxQ3kncuZwyT2eLDpVVMcD.c m_VuWzy0sCJJluCsE5Tx8UrF.c m_IBRnOsQNtYL7X0HdVTMLIH.c
+MODEL_SRC  = FK_cgxe.c
+MODEL_REG = FK_cgxe_registry.c
+MAKEFILE    = FK_cgxe.gmk
+MATLAB_ROOT  = c:\program files\matlab\r2024b\toolbox\stateflow\stateflow\..\..\..
+BUILDARGS   = 
+#------------------------------ Include/Lib Path ------------------------------
+ 
+USER_INCLUDES = -I"\\wsl.localhost\ubuntu-20.04\home\sung\robot_ws\IndyDualArm_SDK\slx" -I"\\wsl.localhost\ubuntu-20.04\home\sung\robot_ws\IndyDualArm_SDK\slx\slprj\_cprj" 
+AUX_INCLUDES = 
+MLSLSF_INCLUDES  = \
+    -I"C:\Program Files\MATLAB\R2024b\extern\include" \
+    -I"C:\Program Files\MATLAB\R2024b\simulink\include" \
+    -I"C:\Program Files\MATLAB\R2024b\rtw\c\src" 
+
+THIRD_PARTY_INCLUDES = -I"\\wsl.localhost\ubuntu-20.04\home\sung\robot_ws\IndyDualArm_SDK\slx\slprj\_cgxe\FK\src" -I"C:\Program Files\MATLAB\R2024b\extern\include\shared_robotics" -I"C:\Program Files\MATLAB\R2024b\toolbox\shared\robotics\externalDependency\libccd\src" -I"C:\Program Files\MATLAB\R2024b\toolbox\shared\robotics\externalDependency\libccd\src\ccd" 
+
+INCLUDE_PATH = $(USER_INCLUDES) $(AUX_INCLUDES) $(MLSLSF_INCLUDES) $(COMPILER_INCLUDES) $(THIRD_PARTY_INCLUDES)
+ 
+#----------------- Compiler and Linker Options --------------------------------
+ 
+# Optimization Options
+ 
+CC_OPTS =  -w   -Dccd_EXPORTS
+CPP_REQ_DEFINES = -DMATLAB_MEX_FILE
+ 
+# Uncomment this line to move warning level to W4
+# cflags = $(cflags:W3=W4)
+CFLAGS = $(CPP_REQ_DEFINES) $(INCLUDE_PATH) CFLAGS="$$CFLAGS $(CC_OPTS)"
+ 
+LDFLAGS =  
+ 
+AUXLDFLAGS = 
+#----------------------------- Source Files -----------------------------------
+ 
+THIRD_PARTY_SRCS = C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/EXTERN~1/libccd/src/ccd_ccd.c C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/EXTERN~1/libccd/src/ccd_mpr.c C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/EXTERN~1/libccd/src/ccd_polytope.c C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/EXTERN~1/libccd/src/ccd_vec3.c C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/ROBOTC~1/builtins/libsrc/COLLIS~1/collisioncodegen_CollisionGeometry.cpp C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/ROBOTC~1/builtins/libsrc/COLLIS~1/collisioncodegen_api.cpp C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/ROBOTC~1/builtins/libsrc/COLLIS~1/collisioncodegen_ccdExtensions.cpp C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/ROBOTC~1/builtins/libsrc/COLLIS~1/collisioncodegen_checkCollision.cpp  
+REQ_SRCS  = $(MODEL_SRC) $(MODEL_REG) $(MODULE_SRCS) $(THIRD_PARTY_SRCS) 
+
+USER_OBJS =
+
+AUX_ABS_OBJS =
+
+REQ_OBJS = $(REQ_SRCS:.cpp=.obj)
+REQ_OBJS2 = $(REQ_OBJS:.c=.obj)
+OBJS = $(REQ_OBJS2) $(USER_OBJS) $(AUX_ABS_OBJS) $(THIRD_PARTY_OBJS)
+OBJLIST_FILE = FK_cgxe.mol
+SFCLIB = 
+AUX_LNK_OBJS = 
+USER_LIBS = 
+PARLIB = 
+ 
+#--------------------------------- Rules --------------------------------------
+ 
+MEX_FILE_NAME = $(MODEL)_$(TARGET).mexw64
+ 
+ $(MEX_FILE_NAME): $(MAKEFILE) $(OBJS) $(SFCLIB) $(AUX_LNK_OBJS)
+	@echo ### Linking ...
+	$(LD) -silent LD="$$MINGWROOT\bin\g++" LDFLAGS="$$LDFLAGS $(LDFLAGS) $(AUXLDFLAGS)" -output $(MEX_FILE_NAME) @$(OBJLIST_FILE) $(USER_LIBS) $(SFCLIB) $(PARLIB) $(IPPLIB) $(THIRD_PARTY_LIBS) 
+%.obj :    %.c
+	$(CC) -c $(CFLAGS) $<
+
+%.obj :    %.cpp
+	$(CC) -c $(CFLAGS) $<
+

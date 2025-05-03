@@ -7,9 +7,9 @@
  *
  * Code generation for model "FD".
  *
- * Model version              : 1.10
+ * Model version              : 1.15
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C source code generated on : Fri May  2 15:30:14 2025
+ * C source code generated on : Sat May  3 16:25:30 2025
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -28,7 +28,7 @@
 #include "rt_logging.h"
 #include "rt_nonfinite.h"
 #include "math.h"
-#include "FD_cd27307_1_gateway.h"
+#include "FD_552be714_1_gateway.h"
 #include "sm_discr_RtwAdvancerData.h"
 #endif                                 /* FD_COMMON_INCLUDES_ */
 
@@ -190,6 +190,13 @@ typedef struct {
   real_T qdot[12];                     /* '<Root>/qdot' */
 } ExtY_FD_T;
 
+/* Parameters (default storage) */
+struct P_FD_T_ {
+  real_T Constant_Value;               /* Expression: pi
+                                        * Referenced by: '<S2>/Constant'
+                                        */
+};
+
 /* Real-time Model Data Structure */
 struct tag_RTM_FD_T {
   const char_T *errorStatus;
@@ -209,6 +216,9 @@ struct tag_RTM_FD_T {
     boolean_T stopRequestedFlag;
   } Timing;
 };
+
+/* Block parameters (default storage) */
+extern P_FD_T FD_P;
 
 /* Block signals (default storage) */
 extern B_FD_T FD_B;
@@ -231,54 +241,46 @@ extern ExtY_FD_T FD_Y;
  *
  */
 extern real_T q_init_l1;               /* Variable: q_init_l1
-                                        * Referenced by: '<S2>/Subsystem_around_RTP_9E3B9D80_PositionTargetValue'
+                                        * Referenced by: '<S2>/Subsystem_around_RTP_646A00CF_PositionTargetValue'
                                         */
 extern real_T q_init_l2;               /* Variable: q_init_l2
-                                        * Referenced by: '<S2>/Subsystem_around_RTP_E93CAD16_PositionTargetValue'
+                                        * Referenced by: '<S2>/Subsystem_around_RTP_136D3059_PositionTargetValue'
                                         */
 extern real_T q_init_l3;               /* Variable: q_init_l3
-                                        * Referenced by: '<S2>/Subsystem_around_RTP_91227F85_PositionTargetValue'
+                                        * Referenced by: '<S2>/Subsystem_around_RTP_68F736A4_PositionTargetValue'
                                         */
 extern real_T q_init_l4;               /* Variable: q_init_l4
-                                        * Referenced by: '<S2>/Subsystem_around_RTP_E6254F13_PositionTargetValue'
+                                        * Referenced by: '<S2>/Subsystem_around_RTP_1FF00632_PositionTargetValue'
                                         */
 extern real_T q_init_l5;               /* Variable: q_init_l5
-                                        * Referenced by: '<S2>/Subsystem_around_RTP_7F2C1EA9_PositionTargetValue'
+                                        * Referenced by: '<S2>/Subsystem_around_RTP_86F95788_PositionTargetValue'
                                         */
 extern real_T q_init_l6;               /* Variable: q_init_l6
-                                        * Referenced by: '<S2>/Subsystem_around_RTP_082B2E3F_PositionTargetValue'
+                                        * Referenced by: '<S2>/Subsystem_around_RTP_F1FE671E_PositionTargetValue'
                                         */
 extern real_T q_init_r1;               /* Variable: q_init_r1
-                                        * Referenced by: '<S10>/Subsystem_around_RTP_959B89D2_PositionTargetValue'
+                                        * Referenced by: '<S10>/Subsystem_around_RTP_2A185AF1_PositionTargetValue'
                                         */
 extern real_T q_init_r2;               /* Variable: q_init_r2
-                                        * Referenced by: '<S10>/Subsystem_around_RTP_0C92D868_PositionTargetValue'
+                                        * Referenced by: '<S10>/Subsystem_around_RTP_5D1F6A67_PositionTargetValue'
                                         */
 extern real_T q_init_r3;               /* Variable: q_init_r3
-                                        * Referenced by: '<S10>/Subsystem_around_RTP_7B95E8FE_PositionTargetValue'
+                                        * Referenced by: '<S10>/Subsystem_around_RTP_C4163BDD_PositionTargetValue'
                                         */
 extern real_T q_init_r4;               /* Variable: q_init_r4
-                                        * Referenced by: '<S10>/Subsystem_around_RTP_EB2AF56F_PositionTargetValue'
+                                        * Referenced by: '<S10>/Subsystem_around_RTP_B3110B4B_PositionTargetValue'
                                         */
 extern real_T q_init_r5;               /* Variable: q_init_r5
-                                        * Referenced by: '<S10>/Subsystem_around_RTP_9C2DC5F9_PositionTargetValue'
+                                        * Referenced by: '<S10>/Subsystem_around_RTP_2D759EE8_PositionTargetValue'
                                         */
 extern real_T q_init_r6;               /* Variable: q_init_r6
-                                        * Referenced by: '<S10>/Subsystem_around_RTP_E7B7C304_PositionTargetValue'
+                                        * Referenced by: '<S10>/Subsystem_around_RTP_5A72AE7E_PositionTargetValue'
                                         */
 
 /* Model entry point functions */
-
-
-#ifdef __cplusplus
-extern "C" {
-#endif
- void FD_initialize(void);
- void FD_step(void);
- void FD_terminate(void);
- #ifdef __cplusplus
-}
-#endif
+extern void FD_initialize(void);
+extern void FD_step(void);
+extern void FD_terminate(void);
 
 /* Real-time Model object */
 extern RT_MODEL_FD_T *const FD_M;
@@ -412,6 +414,6 @@ extern RT_MODEL_FD_T *const FD_M;
  * '<S112>' : 'FD/DualArm/Right/Simulink-PS Converter6/EVAL_KEY'
  * '<S113>' : 'FD/DualArm/Right/Simulink-PS Converter7/EVAL_KEY'
  * '<S114>' : 'FD/DualArm/Solver Configuration/EVAL_KEY'
- * '<S115>' : 'FD/DualArm/Subsystem/body'
+ * '<S115>' : 'FD/DualArm/Subsystem/body1'
  */
 #endif                                 /* FD_h_ */

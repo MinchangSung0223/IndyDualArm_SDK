@@ -46,17 +46,9 @@ find_library(FOUND_LIBM m NO_SYSTEM_ENVIRONMENT_PATH PATHS ${CMAKE_C_IMPLICIT_LI
 ###########################################################################
 
 # Definition of target "FK".
-add_library(FK STATIC ${MATLAB_ROOT}/toolbox/shared/robotics/externalDependency/libccd/src/ccd_ccd.c
-    ${MATLAB_ROOT}/toolbox/shared/robotics/externalDependency/libccd/src/ccd_mpr.c
-    ${MATLAB_ROOT}/toolbox/shared/robotics/externalDependency/libccd/src/ccd_polytope.c
-    ${MATLAB_ROOT}/toolbox/shared/robotics/externalDependency/libccd/src/ccd_vec3.c
-    ${MATLAB_ROOT}/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_CollisionGeometry.cpp
-    ${MATLAB_ROOT}/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_api.cpp
-    ${MATLAB_ROOT}/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_ccdExtensions.cpp
-    ${MATLAB_ROOT}/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_checkCollision.cpp
-    ${MATLAB_ROOT}/rtw/c/src/rt_logging.c
+add_library(FK STATIC ${MATLAB_ROOT}/rtw/c/src/rt_logging.c
     ${START_DIR}/FK_grt_rtw/FK.c
-    ${START_DIR}/FK_grt_rtw/rtGetNaN.c
+    ${START_DIR}/FK_grt_rtw/FK_data.c
     ${START_DIR}/FK_grt_rtw/rt_nonfinite.c
     ${MATLAB_ROOT}/rtw/c/src/common/rt_main.c)
 
@@ -71,8 +63,7 @@ set_target_properties(FK PROPERTIES PREFIX ""
 target_compile_features(FK PUBLIC c_std_99)
 
 # Specify compiler preprocessor definitions for target "FK".
-target_compile_definitions(FK PRIVATE -Dccd_EXPORTS
-    -DMODEL=FK
+target_compile_definitions(FK PRIVATE -DMODEL=FK
     -DNUMST=1
     -DNCSTATES=0
     -DHAVESTDIO
@@ -90,9 +81,6 @@ target_compile_definitions(FK PRIVATE -Dccd_EXPORTS
 
 # Specify include directories for target "FK".
 target_include_directories(FK PRIVATE ${START_DIR}
-    ${MATLAB_ROOT}/extern/include/shared_robotics
-    ${MATLAB_ROOT}/toolbox/shared/robotics/externalDependency/libccd/src
-    ${MATLAB_ROOT}/toolbox/shared/robotics/externalDependency/libccd/src/ccd
     ${START_DIR}/FK_grt_rtw
     ${MATLAB_ROOT}/extern/include
     ${MATLAB_ROOT}/simulink/include

@@ -7,9 +7,9 @@
  *
  * Code generation for model "ID".
  *
- * Model version              : 1.2
+ * Model version              : 2.2
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C source code generated on : Fri May  2 14:17:03 2025
+ * C source code generated on : Sat May  3 16:27:29 2025
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -90,36 +90,36 @@ typedef struct {
 
 /* Block states (default storage) for system '<Root>' */
 typedef struct {
-  robotics_slmanip_internal_blo_T obj; /* '<S2>/MATLAB System' */
-  robotics_slmanip_internal__hy_T obj_h;/* '<S4>/MATLAB System' */
-  robotics_slmanip_internal_b_h_T obj_g;/* '<S3>/MATLAB System' */
-  uint32_T method;                     /* '<S4>/MATLAB System' */
-  uint32_T state;                      /* '<S4>/MATLAB System' */
-  uint32_T state_p[2];                 /* '<S4>/MATLAB System' */
-  uint32_T state_m[625];               /* '<S4>/MATLAB System' */
-  uint32_T method_k;                   /* '<S3>/MATLAB System' */
-  uint32_T state_k;                    /* '<S3>/MATLAB System' */
-  uint32_T state_o[2];                 /* '<S3>/MATLAB System' */
-  uint32_T state_l[625];               /* '<S3>/MATLAB System' */
-  uint32_T method_h;                   /* '<S2>/MATLAB System' */
-  uint32_T state_b;                    /* '<S2>/MATLAB System' */
-  uint32_T state_n[2];                 /* '<S2>/MATLAB System' */
-  uint32_T state_d[625];               /* '<S2>/MATLAB System' */
-  boolean_T objisempty;                /* '<S4>/MATLAB System' */
-  boolean_T method_not_empty;          /* '<S4>/MATLAB System' */
-  boolean_T state_not_empty;           /* '<S4>/MATLAB System' */
-  boolean_T state_not_empty_l;         /* '<S4>/MATLAB System' */
-  boolean_T state_not_empty_i;         /* '<S4>/MATLAB System' */
-  boolean_T objisempty_h;              /* '<S3>/MATLAB System' */
-  boolean_T method_not_empty_j;        /* '<S3>/MATLAB System' */
-  boolean_T state_not_empty_p;         /* '<S3>/MATLAB System' */
-  boolean_T state_not_empty_d;         /* '<S3>/MATLAB System' */
-  boolean_T state_not_empty_g;         /* '<S3>/MATLAB System' */
-  boolean_T objisempty_n;              /* '<S2>/MATLAB System' */
-  boolean_T method_not_empty_o;        /* '<S2>/MATLAB System' */
-  boolean_T state_not_empty_gu;        /* '<S2>/MATLAB System' */
-  boolean_T state_not_empty_k;         /* '<S2>/MATLAB System' */
-  boolean_T state_not_empty_d1;        /* '<S2>/MATLAB System' */
+  robotics_slmanip_internal_blo_T obj; /* '<S3>/MATLAB System' */
+  robotics_slmanip_internal__hy_T obj_h;/* '<S5>/MATLAB System' */
+  robotics_slmanip_internal_b_h_T obj_g;/* '<S4>/MATLAB System' */
+  uint32_T method;                     /* '<S5>/MATLAB System' */
+  uint32_T state;                      /* '<S5>/MATLAB System' */
+  uint32_T state_p[2];                 /* '<S5>/MATLAB System' */
+  uint32_T state_m[625];               /* '<S5>/MATLAB System' */
+  uint32_T method_k;                   /* '<S4>/MATLAB System' */
+  uint32_T state_k;                    /* '<S4>/MATLAB System' */
+  uint32_T state_o[2];                 /* '<S4>/MATLAB System' */
+  uint32_T state_l[625];               /* '<S4>/MATLAB System' */
+  uint32_T method_h;                   /* '<S3>/MATLAB System' */
+  uint32_T state_b;                    /* '<S3>/MATLAB System' */
+  uint32_T state_n[2];                 /* '<S3>/MATLAB System' */
+  uint32_T state_d[625];               /* '<S3>/MATLAB System' */
+  boolean_T objisempty;                /* '<S5>/MATLAB System' */
+  boolean_T method_not_empty;          /* '<S5>/MATLAB System' */
+  boolean_T state_not_empty;           /* '<S5>/MATLAB System' */
+  boolean_T state_not_empty_l;         /* '<S5>/MATLAB System' */
+  boolean_T state_not_empty_i;         /* '<S5>/MATLAB System' */
+  boolean_T objisempty_h;              /* '<S4>/MATLAB System' */
+  boolean_T method_not_empty_j;        /* '<S4>/MATLAB System' */
+  boolean_T state_not_empty_p;         /* '<S4>/MATLAB System' */
+  boolean_T state_not_empty_d;         /* '<S4>/MATLAB System' */
+  boolean_T state_not_empty_g;         /* '<S4>/MATLAB System' */
+  boolean_T objisempty_n;              /* '<S3>/MATLAB System' */
+  boolean_T method_not_empty_o;        /* '<S3>/MATLAB System' */
+  boolean_T state_not_empty_gu;        /* '<S3>/MATLAB System' */
+  boolean_T state_not_empty_k;         /* '<S3>/MATLAB System' */
+  boolean_T state_not_empty_d1;        /* '<S3>/MATLAB System' */
 } DW_ID_T;
 
 /* External inputs (root inport signals with default storage) */
@@ -134,6 +134,13 @@ typedef struct {
   real_T c[12];                        /* '<Root>/c' */
   real_T g[12];                        /* '<Root>/g' */
 } ExtY_ID_T;
+
+/* Parameters (default storage) */
+struct P_ID_T_ {
+  real_T Constant19_Value;             /* Expression: pi
+                                        * Referenced by: '<S2>/Constant19'
+                                        */
+};
 
 /* Real-time Model Data Structure */
 struct tag_RTM_ID_T {
@@ -154,6 +161,9 @@ struct tag_RTM_ID_T {
     boolean_T stopRequestedFlag;
   } Timing;
 };
+
+/* Block parameters (default storage) */
+extern P_ID_T ID_P;
 
 /* Block signals (default storage) */
 extern B_ID_T ID_B;
@@ -197,8 +207,9 @@ extern RT_MODEL_ID_T *const ID_M;
  *
  * '<Root>' : 'ID'
  * '<S1>'   : 'ID/InverseDynamics'
- * '<S2>'   : 'ID/InverseDynamics/Gravity Torque'
- * '<S3>'   : 'ID/InverseDynamics/Joint Space Mass Matrix'
- * '<S4>'   : 'ID/InverseDynamics/Velocity Product Torque'
+ * '<S2>'   : 'ID/Subsystem3'
+ * '<S3>'   : 'ID/InverseDynamics/Gravity Torque'
+ * '<S4>'   : 'ID/InverseDynamics/Joint Space Mass Matrix'
+ * '<S5>'   : 'ID/InverseDynamics/Velocity Product Torque'
  */
 #endif                                 /* ID_h_ */

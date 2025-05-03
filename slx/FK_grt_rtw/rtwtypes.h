@@ -7,9 +7,9 @@
  *
  * Code generation for model "FK".
  *
- * Model version              : 1.8
+ * Model version              : 2.4
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C source code generated on : Fri May  2 20:22:47 2025
+ * C source code generated on : Sat May  3 16:25:47 2025
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping

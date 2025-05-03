@@ -66,7 +66,7 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="meshes/visual/Indy7_1.stl"/>
+				<mesh filename="meshes/collision/Indy7_1.stl"/>
 			</geometry>
 		</visual>
 		<collision>
@@ -85,7 +85,7 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="meshes/visual/Indy7_2.stl"/>
+				<mesh filename="meshes/collision/Indy7_2.stl"/>
 			</geometry>
 		</visual>
 		<collision>
@@ -104,7 +104,7 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="meshes/visual/Indy7_3.stl"/>
+				<mesh filename="meshes/collision/Indy7_3.stl"/>
 			</geometry>
 		</visual>
 		<collision>
@@ -123,7 +123,7 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="meshes/visual/Indy7_4.stl"/>
+				<mesh filename="meshes/collision/Indy7_4.stl"/>
 			</geometry>
 		</visual>
 		<collision>
@@ -142,7 +142,7 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="meshes/visual/Indy7_5.stl"/>
+				<mesh filename="meshes/collision/Indy7_5.stl"/>
 			</geometry>
 		</visual>
 		<collision>
@@ -161,7 +161,7 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="meshes/visual/Indy7_6.stl"/>
+				<mesh filename="meshes/collision/Indy7_6.stl"/>
 			</geometry>
 		</visual>
 		<collision>
@@ -202,7 +202,7 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="meshes/visual/Indy7_1.stl"/>
+				<mesh filename="meshes/collision/Indy7_1.stl"/>
 			</geometry>
 		</visual>
 		<collision>
@@ -221,7 +221,7 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="meshes/visual/Indy7_2.stl"/>
+				<mesh filename="meshes/collision/Indy7_2.stl"/>
 			</geometry>
 		</visual>
 		<collision>
@@ -240,7 +240,7 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="meshes/visual/Indy7_3.stl"/>
+				<mesh filename="meshes/collision/Indy7_3.stl"/>
 			</geometry>
 		</visual>
 		<collision>
@@ -259,7 +259,7 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="meshes/visual/Indy7_4.stl"/>
+				<mesh filename="meshes/collision/Indy7_4.stl"/>
 			</geometry>
 		</visual>
 		<collision>
@@ -278,7 +278,7 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="meshes/visual/Indy7_5.stl"/>
+				<mesh filename="meshes/collision/Indy7_5.stl"/>
 			</geometry>
 		</visual>
 		<collision>
@@ -297,7 +297,7 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="meshes/visual/Indy7_6.stl"/>
+				<mesh filename="meshes/collision/Indy7_6.stl"/>
 			</geometry>
 		</visual>
 		<collision>
@@ -329,8 +329,8 @@
 		<mesh filename="meshes/visual/axis.obj" scale="0.01 0.01 0.01"/>
 	      </geometry>	        
 	    </visual>
-		
 		 -->
+		
 	    <inertial>
 	      <mass value="0"/>
 	      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
@@ -339,22 +339,23 @@
 	</link>	
 		
  	<joint name="world_fixed" type="fixed">
- 		<origin rpy="0 0 3.141592" xyz="0 0 0"/>
+ 		<origin rpy="0 0 0" xyz="0 0 0"/>
  		<parent link="world"/>
 		<child link="body"/>
  	</joint>
+		<joint name="l_body_fixed" type="fixed">
+ 		<origin rpy="-2.091 0 0" xyz="0 0.1551 1.2924"/>
+		<axis xyz="0 0 1"/>
+ 		<parent link="body"/>
+		<child link="l_0"/>
+ 	</joint> 	 
  	<joint name="r_body_fixed" type="fixed">   
  		<origin rpy=" 2.091 0 0" xyz="0 -0.1551 1.2924"/>
 		<axis xyz="0 0 1"/>
  		<parent link="body"/>
 		<child link="r_0"/>
  	</joint> 	
- 	<joint name="l_body_fixed" type="fixed">
- 		<origin rpy=" 2.091 0 3.141592" xyz="0 0.1551 1.2924"/>
-		<axis xyz="0 0 1"/>
- 		<parent link="body"/>
-		<child link="l_0"/>
- 	</joint> 	 	
+ 	
 	<joint name="l_joint_0" type="revolute">
  		<origin rpy="0 0 0" xyz="0 0 0.08"/>
 		<axis xyz="0 0 1"/>

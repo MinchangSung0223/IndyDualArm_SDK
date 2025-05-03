@@ -3,27 +3,27 @@
 # Modify the following macros to reflect the tools you wish to use for
 # compiling and linking your code.
 #
-CC = "C:\Program Files\MATLAB\R2024a\bin\win64\mex.exe" -R2018a
+CC = "C:\Program Files\MATLAB\R2024b\bin\win64\mex.exe" -R2018a
 LD = $(CC)
  
 MODEL     = indy7_dualArm
 TARGET      = cgxe
-MODULE_SRCS   = m_qq0HSn4MnMIEEMjNzXu2qD.c m_T6MwjqiGx6loI7k5o1vVhG.c m_TCGSFIrmgTrdrXjldiS8GC.c m_87mWOnq5ANQkjTWghyXDKD.c m_ixuv55C8EtZmU1WzAsjQDD.c m_imQiRskwoVIlJDtKF8Ie9C.c m_s5IVGQHtlmgQqKlp1mGyWG.c m_cGalwQDtj5O4ZBPIMXFzfD.c
+MODULE_SRCS   = m_YWWm119ySh4edf8lUl8ZrE.c m_5i5a5OWd9sepnydcE8sQ3F.c m_JrnXt4Rd0mM79GD2fCQ2oF.c
 MODEL_SRC  = indy7_dualArm_cgxe.c
 MODEL_REG = indy7_dualArm_cgxe_registry.c
 MAKEFILE    = indy7_dualArm_cgxe.gmk
-MATLAB_ROOT  = c:\program files\matlab\r2024a\toolbox\stateflow\stateflow\..\..\..
+MATLAB_ROOT  = c:\program files\matlab\r2024b\toolbox\stateflow\stateflow\..\..\..
 BUILDARGS   = 
 #------------------------------ Include/Lib Path ------------------------------
  
-USER_INCLUDES = -I"\\wsl.localhost\ubuntu-20.04\home\sung\robot_ws\indydualarm_sdk\slx\slprj\_cgxe\indy7_dualarm\src" -I"\\wsl.localhost\ubuntu-20.04\home\sung\robot_ws\indydualarm_sdk\slx" -I"C:\Users\sung\Desktop\dualarmmatlab" -I"\\wsl.localhost\ubuntu-20.04\home\sung\robot_ws\IndyDualArm_SDK\slx\slprj\_cprj" 
+USER_INCLUDES = -I"\\wsl.localhost\ubuntu-20.04\home\sung\robot_ws\IndyDualArm_SDK\slx" -I"\\wsl.localhost\ubuntu-20.04\home\sung\robot_ws\IndyDualArm_SDK\slx\slprj\_cprj" 
 AUX_INCLUDES = 
 MLSLSF_INCLUDES  = \
-    -I"C:\Program Files\MATLAB\R2024a\extern\include" \
-    -I"C:\Program Files\MATLAB\R2024a\simulink\include" \
-    -I"C:\Program Files\MATLAB\R2024a\rtw\c\src" 
+    -I"C:\Program Files\MATLAB\R2024b\extern\include" \
+    -I"C:\Program Files\MATLAB\R2024b\simulink\include" \
+    -I"C:\Program Files\MATLAB\R2024b\rtw\c\src" 
 
-THIRD_PARTY_INCLUDES = -I"\\wsl.localhost\ubuntu-20.04\home\sung\robot_ws\IndyDualArm_SDK\slx\slprj\_cgxe\indy7_dualArm\src" -I"\\wsl.localhost\ubuntu-20.04\home\sung\robot_ws\IndyDualArm_SDK\slx" -I"C:\Program Files\MATLAB\R2024a\extern\include\shared_robotics" -I"C:\Program Files\MATLAB\R2024a\toolbox\shared\robotics\externalDependency\libccd\src" -I"C:\Program Files\MATLAB\R2024a\toolbox\shared\robotics\externalDependency\libccd\src\ccd" 
+THIRD_PARTY_INCLUDES = -I"\\wsl.localhost\ubuntu-20.04\home\sung\robot_ws\IndyDualArm_SDK\slx\slprj\_cgxe\indy7_dualArm\src" -I"C:\Program Files\MATLAB\R2024b\extern\include\shared_robotics" -I"C:\Program Files\MATLAB\R2024b\toolbox\shared\robotics\externalDependency\libccd\src" -I"C:\Program Files\MATLAB\R2024b\toolbox\shared\robotics\externalDependency\libccd\src\ccd" 
 
 INCLUDE_PATH = $(USER_INCLUDES) $(AUX_INCLUDES) $(MLSLSF_INCLUDES) $(COMPILER_INCLUDES) $(THIRD_PARTY_INCLUDES)
  
@@ -43,7 +43,7 @@ LDFLAGS =
 AUXLDFLAGS = 
 #----------------------------- Source Files -----------------------------------
  
-THIRD_PARTY_SRCS = c:/PROGRA~1/matlab/r2024a/toolbox/shared/robotics/EXTERN~1/libccd/src/ccd_ccd.c c:/PROGRA~1/matlab/r2024a/toolbox/shared/robotics/EXTERN~1/libccd/src/ccd_mpr.c c:/PROGRA~1/matlab/r2024a/toolbox/shared/robotics/EXTERN~1/libccd/src/ccd_polytope.c c:/PROGRA~1/matlab/r2024a/toolbox/shared/robotics/EXTERN~1/libccd/src/ccd_vec3.c c:/PROGRA~1/matlab/r2024a/toolbox/shared/robotics/ROBOTC~1/builtins/libsrc/COLLIS~1/collisioncodegen_CollisionGeometry.cpp c:/PROGRA~1/matlab/r2024a/toolbox/shared/robotics/ROBOTC~1/builtins/libsrc/COLLIS~1/collisioncodegen_api.cpp c:/PROGRA~1/matlab/r2024a/toolbox/shared/robotics/ROBOTC~1/builtins/libsrc/COLLIS~1/collisioncodegen_ccdExtensions.cpp c:/PROGRA~1/matlab/r2024a/toolbox/shared/robotics/ROBOTC~1/builtins/libsrc/COLLIS~1/collisioncodegen_checkCollision.cpp  
+THIRD_PARTY_SRCS = C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/EXTERN~1/libccd/src/ccd_ccd.c C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/EXTERN~1/libccd/src/ccd_mpr.c C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/EXTERN~1/libccd/src/ccd_polytope.c C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/EXTERN~1/libccd/src/ccd_vec3.c C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/ROBOTC~1/builtins/libsrc/COLLIS~1/collisioncodegen_CollisionGeometry.cpp C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/ROBOTC~1/builtins/libsrc/COLLIS~1/collisioncodegen_api.cpp C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/ROBOTC~1/builtins/libsrc/COLLIS~1/collisioncodegen_ccdExtensions.cpp C:/PROGRA~1/MATLAB/R2024b/toolbox/shared/robotics/ROBOTC~1/builtins/libsrc/COLLIS~1/collisioncodegen_checkCollision.cpp  
 REQ_SRCS  = $(MODEL_SRC) $(MODEL_REG) $(MODULE_SRCS) $(THIRD_PARTY_SRCS) 
 
 USER_OBJS =

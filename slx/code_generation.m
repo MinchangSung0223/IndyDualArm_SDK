@@ -27,7 +27,7 @@
 restoredefaultpath;          % MATLAB 경로 초기화
 addpath(genpath(pwd));       % 현재 폴더와 하위 폴더를 모두 포함
 
-models = { 'TaskSpaceController'};
+models = { 'FD','FK','ID'};
 
 for k = 1:numel(models)
     m = models{k};

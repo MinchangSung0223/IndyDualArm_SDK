@@ -56,6 +56,7 @@ add_library(ID STATIC ${MATLAB_ROOT}/toolbox/shared/robotics/externalDependency/
     ${MATLAB_ROOT}/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_checkCollision.cpp
     ${MATLAB_ROOT}/rtw/c/src/rt_logging.c
     ${START_DIR}/ID_grt_rtw/ID.c
+    ${START_DIR}/ID_grt_rtw/ID_data.c
     ${START_DIR}/ID_grt_rtw/rtGetNaN.c
     ${START_DIR}/ID_grt_rtw/rt_nonfinite.c
     ${MATLAB_ROOT}/rtw/c/src/common/rt_main.c)

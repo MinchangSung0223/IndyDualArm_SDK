@@ -7,9 +7,9 @@
  *
  * Code generation for model "FD".
  *
- * Model version              : 1.10
+ * Model version              : 1.15
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C source code generated on : Fri May  2 15:30:14 2025
+ * C source code generated on : Sat May  3 16:25:30 2025
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -25,41 +25,41 @@
 #include <stddef.h>
 
 /* Exported block parameters */
-real_T q_init_l1 = 0.0;                /* Variable: q_init_l1
-                                        * Referenced by: '<S2>/Subsystem_around_RTP_9E3B9D80_PositionTargetValue'
+real_T q_init_l1 = 0.165747;           /* Variable: q_init_l1
+                                        * Referenced by: '<S2>/Subsystem_around_RTP_646A00CF_PositionTargetValue'
                                         */
-real_T q_init_l2 = 0.0;                /* Variable: q_init_l2
-                                        * Referenced by: '<S2>/Subsystem_around_RTP_E93CAD16_PositionTargetValue'
+real_T q_init_l2 = 0.819274;           /* Variable: q_init_l2
+                                        * Referenced by: '<S2>/Subsystem_around_RTP_136D3059_PositionTargetValue'
                                         */
-real_T q_init_l3 = 0.0;                /* Variable: q_init_l3
-                                        * Referenced by: '<S2>/Subsystem_around_RTP_91227F85_PositionTargetValue'
+real_T q_init_l3 = 1.26369;            /* Variable: q_init_l3
+                                        * Referenced by: '<S2>/Subsystem_around_RTP_68F736A4_PositionTargetValue'
                                         */
-real_T q_init_l4 = 0.0;                /* Variable: q_init_l4
-                                        * Referenced by: '<S2>/Subsystem_around_RTP_E6254F13_PositionTargetValue'
+real_T q_init_l4 = 0.604148;           /* Variable: q_init_l4
+                                        * Referenced by: '<S2>/Subsystem_around_RTP_1FF00632_PositionTargetValue'
                                         */
-real_T q_init_l5 = 0.0;                /* Variable: q_init_l5
-                                        * Referenced by: '<S2>/Subsystem_around_RTP_7F2C1EA9_PositionTargetValue'
+real_T q_init_l5 = 1.0515;             /* Variable: q_init_l5
+                                        * Referenced by: '<S2>/Subsystem_around_RTP_86F95788_PositionTargetValue'
                                         */
-real_T q_init_l6 = 0.0;                /* Variable: q_init_l6
-                                        * Referenced by: '<S2>/Subsystem_around_RTP_082B2E3F_PositionTargetValue'
+real_T q_init_l6 = -0.139217;          /* Variable: q_init_l6
+                                        * Referenced by: '<S2>/Subsystem_around_RTP_F1FE671E_PositionTargetValue'
                                         */
-real_T q_init_r1 = 0.0;                /* Variable: q_init_r1
-                                        * Referenced by: '<S10>/Subsystem_around_RTP_959B89D2_PositionTargetValue'
+real_T q_init_r1 = -0.165747;          /* Variable: q_init_r1
+                                        * Referenced by: '<S10>/Subsystem_around_RTP_2A185AF1_PositionTargetValue'
                                         */
-real_T q_init_r2 = 0.0;                /* Variable: q_init_r2
-                                        * Referenced by: '<S10>/Subsystem_around_RTP_0C92D868_PositionTargetValue'
+real_T q_init_r2 = -0.819274;          /* Variable: q_init_r2
+                                        * Referenced by: '<S10>/Subsystem_around_RTP_5D1F6A67_PositionTargetValue'
                                         */
-real_T q_init_r3 = 0.0;                /* Variable: q_init_r3
-                                        * Referenced by: '<S10>/Subsystem_around_RTP_7B95E8FE_PositionTargetValue'
+real_T q_init_r3 = -1.26369;           /* Variable: q_init_r3
+                                        * Referenced by: '<S10>/Subsystem_around_RTP_C4163BDD_PositionTargetValue'
                                         */
-real_T q_init_r4 = 0.0;                /* Variable: q_init_r4
-                                        * Referenced by: '<S10>/Subsystem_around_RTP_EB2AF56F_PositionTargetValue'
+real_T q_init_r4 = -0.604148;          /* Variable: q_init_r4
+                                        * Referenced by: '<S10>/Subsystem_around_RTP_B3110B4B_PositionTargetValue'
                                         */
-real_T q_init_r5 = 0.0;                /* Variable: q_init_r5
-                                        * Referenced by: '<S10>/Subsystem_around_RTP_9C2DC5F9_PositionTargetValue'
+real_T q_init_r5 = -1.0515;            /* Variable: q_init_r5
+                                        * Referenced by: '<S10>/Subsystem_around_RTP_2D759EE8_PositionTargetValue'
                                         */
-real_T q_init_r6 = 0.0;                /* Variable: q_init_r6
-                                        * Referenced by: '<S10>/Subsystem_around_RTP_E7B7C304_PositionTargetValue'
+real_T q_init_r6 = 0.139217;           /* Variable: q_init_r6
+                                        * Referenced by: '<S10>/Subsystem_around_RTP_5A72AE7E_PositionTargetValue'
                                         */
 
 /* Block signals (default storage) */
@@ -108,31 +108,31 @@ void FD_step(void)
   real_T STATE_1_T1_tmp;
 
   /* SignalConversion generated from: '<S114>/OUTPUT_1_0' incorporates:
-   *  Constant: '<S10>/Subsystem_around_RTP_0C92D868_PositionTargetValue'
-   *  Constant: '<S10>/Subsystem_around_RTP_7B95E8FE_PositionTargetValue'
-   *  Constant: '<S10>/Subsystem_around_RTP_959B89D2_PositionTargetValue'
-   *  Constant: '<S10>/Subsystem_around_RTP_9C2DC5F9_PositionTargetValue'
-   *  Constant: '<S10>/Subsystem_around_RTP_E7B7C304_PositionTargetValue'
-   *  Constant: '<S10>/Subsystem_around_RTP_EB2AF56F_PositionTargetValue'
-   *  Constant: '<S2>/Subsystem_around_RTP_082B2E3F_PositionTargetValue'
-   *  Constant: '<S2>/Subsystem_around_RTP_7F2C1EA9_PositionTargetValue'
-   *  Constant: '<S2>/Subsystem_around_RTP_91227F85_PositionTargetValue'
-   *  Constant: '<S2>/Subsystem_around_RTP_9E3B9D80_PositionTargetValue'
-   *  Constant: '<S2>/Subsystem_around_RTP_E6254F13_PositionTargetValue'
-   *  Constant: '<S2>/Subsystem_around_RTP_E93CAD16_PositionTargetValue'
+   *  Constant: '<S10>/Subsystem_around_RTP_2A185AF1_PositionTargetValue'
+   *  Constant: '<S10>/Subsystem_around_RTP_2D759EE8_PositionTargetValue'
+   *  Constant: '<S10>/Subsystem_around_RTP_5A72AE7E_PositionTargetValue'
+   *  Constant: '<S10>/Subsystem_around_RTP_5D1F6A67_PositionTargetValue'
+   *  Constant: '<S10>/Subsystem_around_RTP_B3110B4B_PositionTargetValue'
+   *  Constant: '<S10>/Subsystem_around_RTP_C4163BDD_PositionTargetValue'
+   *  Constant: '<S2>/Subsystem_around_RTP_136D3059_PositionTargetValue'
+   *  Constant: '<S2>/Subsystem_around_RTP_1FF00632_PositionTargetValue'
+   *  Constant: '<S2>/Subsystem_around_RTP_646A00CF_PositionTargetValue'
+   *  Constant: '<S2>/Subsystem_around_RTP_68F736A4_PositionTargetValue'
+   *  Constant: '<S2>/Subsystem_around_RTP_86F95788_PositionTargetValue'
+   *  Constant: '<S2>/Subsystem_around_RTP_F1FE671E_PositionTargetValue'
    */
-  FD_B.TmpSignalConversionAtOUTPUT_1_0[0] = q_init_l6;
-  FD_B.TmpSignalConversionAtOUTPUT_1_0[1] = q_init_r2;
-  FD_B.TmpSignalConversionAtOUTPUT_1_0[2] = q_init_r3;
-  FD_B.TmpSignalConversionAtOUTPUT_1_0[3] = q_init_l5;
-  FD_B.TmpSignalConversionAtOUTPUT_1_0[4] = q_init_l3;
-  FD_B.TmpSignalConversionAtOUTPUT_1_0[5] = q_init_r1;
-  FD_B.TmpSignalConversionAtOUTPUT_1_0[6] = q_init_r5;
-  FD_B.TmpSignalConversionAtOUTPUT_1_0[7] = q_init_l1;
-  FD_B.TmpSignalConversionAtOUTPUT_1_0[8] = q_init_l4;
-  FD_B.TmpSignalConversionAtOUTPUT_1_0[9] = q_init_r6;
-  FD_B.TmpSignalConversionAtOUTPUT_1_0[10] = q_init_l2;
-  FD_B.TmpSignalConversionAtOUTPUT_1_0[11] = q_init_r4;
+  FD_B.TmpSignalConversionAtOUTPUT_1_0[0] = q_init_l2;
+  FD_B.TmpSignalConversionAtOUTPUT_1_0[1] = q_init_l4;
+  FD_B.TmpSignalConversionAtOUTPUT_1_0[2] = q_init_r1;
+  FD_B.TmpSignalConversionAtOUTPUT_1_0[3] = q_init_r5;
+  FD_B.TmpSignalConversionAtOUTPUT_1_0[4] = q_init_r6;
+  FD_B.TmpSignalConversionAtOUTPUT_1_0[5] = q_init_r2;
+  FD_B.TmpSignalConversionAtOUTPUT_1_0[6] = q_init_l1 + 3.1415926535897931;
+  FD_B.TmpSignalConversionAtOUTPUT_1_0[7] = q_init_l3;
+  FD_B.TmpSignalConversionAtOUTPUT_1_0[8] = q_init_l5;
+  FD_B.TmpSignalConversionAtOUTPUT_1_0[9] = q_init_r4;
+  FD_B.TmpSignalConversionAtOUTPUT_1_0[10] = q_init_r3;
+  FD_B.TmpSignalConversionAtOUTPUT_1_0[11] = q_init_l6;
 
   /* MultibodyStateDiscrete: '<S114>/STATE_1' incorporates:
    *  MultibodyOutputDiscrete: '<S114>/OUTPUT_1_0'
@@ -285,9 +285,11 @@ void FD_step(void)
   }
 
   /* Outport: '<Root>/q' incorporates:
+   *  Constant: '<S2>/Constant'
    *  MultibodyOutputDiscrete: '<S114>/OUTPUT_1_0'
+   *  Sum: '<S2>/Sum'
    */
-  FD_Y.q[0] = FD_DW.OUTPUT_1_0_Y[0];
+  FD_Y.q[0] = FD_DW.OUTPUT_1_0_Y[0] - FD_P.Constant_Value;
   FD_Y.q[1] = FD_DW.OUTPUT_1_0_Y[2];
   FD_Y.q[2] = FD_DW.OUTPUT_1_0_Y[4];
   FD_Y.q[3] = FD_DW.OUTPUT_1_0_Y[6];
@@ -752,12 +754,12 @@ void FD_initialize(void)
     FD_M->Timing.stepSize0, (&rtmGetErrorStatus(FD_M)));
 
   /* Start for MultibodyStateDiscrete: '<S114>/STATE_1' */
-  FD_DW.STATE_1_RtwData = sm_discr_RtwAdvancerData_create(FD_cd27307_1_gateway(),
+  FD_DW.STATE_1_RtwData = sm_discr_RtwAdvancerData_create(FD_552be714_1_gateway(),
     0);
 
   /* Start for MultibodyOutputDiscrete: '<S114>/OUTPUT_1_0' */
   FD_DW.OUTPUT_1_0_RtwData = sm_discr_RtwAdvancerData_create
-    (FD_cd27307_1_gateway(), 0);
+    (FD_552be714_1_gateway(), 0);
 }
 
 /* Model terminate function */

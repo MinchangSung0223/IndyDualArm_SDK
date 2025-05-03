@@ -95,7 +95,14 @@ void Robot::reset_q(JVec q){
 }
 void Robot::reset_q(const VectorXd& q){
 	for (int i = 0; i<q.size();i++){
-		this->sim->resetJointState(this->robot_id,this->actuated_joint_id.at(i),q[i]);
+		if(i==0){
+			this->sim->resetJointState(this->robot_id,this->actuated_joint_id.at(i),q[i]+3.141592);
+
+		}
+		else{
+			this->sim->resetJointState(this->robot_id,this->actuated_joint_id.at(i),q[i]);
+
+		}
 	}
 }
 JVec saturate(JVec val, JVec max_val){
