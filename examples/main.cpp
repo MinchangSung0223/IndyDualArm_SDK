@@ -15,11 +15,15 @@ int main()
 
     /* ── (2) IndyDualArm 래퍼 ─────────────────────────── */
     IndyDualArm arm;
-    VectorXd q(12),qdot(12);
+    
+    VectorXd q(12),qdot(12),q_nom(12), qdot_nom(12);
     qdot.setZero();
+    qdot_nom.setZero();
     q << 0.165747, 0.819274, 1.26369, 0.604148, 1.0515, -0.139217,
         -0.165747, -0.819274, -1.26369, -0.604148, -1.0515, 0.139217;
+    q_nom = q;
     arm.initialize(q);
+
 
     const double Tf = 100.0; // [s] 시뮬 길이
     double t = 0.0;
@@ -57,7 +61,10 @@ int main()
 
     b0 << 100, 100;
     a << 0.01, 0.01;
-
+    VectorXd eint_nr(12),eint_dn(12),eint_dr(12);
+    eint_nr.setZero();
+    eint_dn.setZero();
+    eint_dr.setZero();
     while (t < Tf + 2.0)
     {
 
@@ -71,12 +78,22 @@ int main()
 
         arm.forwardKinematics(q, qdot);
         arm.inverseDynamics(q, qdot);
-        VectorXd tau_hinf = arm.hinfController(q, qdot, HinfK);
-        VectorXd tau_tsc = arm.taskSpaceController(q, qdot, dt, TaskKp, TaskKv, b0, a, HinfK);
-        VectorXd tau(12);
-        std::cout<<arm.lr.g.transpose()<<std::endl;
+        arm.inverseDynamicsNom(q_nom, qdot_nom);
+        
+        VectorXd tau_hinf = arm.hinfController(q, qdot, HinfK*0.1,0.001,eint_dr);
+        VectorXd e_dn = arm.des_lr.q - q_nom;
+        VectorXd edot_dn = arm.des_lr.qdot - qdot_nom;
+        eint_dn = eint_dn+ e_dn*dt;
+        VectorXd tau_hinf_nom = arm.nom_lr.M*(arm.des_lr.qddot+20*edot_dn+100*e_dn)+arm.nom_lr.c +arm.nom_lr.g+0.1*HinfK.asDiagonal()*(edot_dn+20.0*e_dn+100.0*eint_dn);
+        
 
-        // arm.forwardDynamics(tau_tsc, q, qdot); // 한 스텝 적분
+        VectorXd tau_tsc = arm.taskSpaceController(q, qdot, dt, TaskKp, TaskKv, b0, a, HinfK);
+        // VectorXd tau_a = arm.NRIC(HinfK*0.001,q,qdot,q_nom,qdot_nom,eint_nr,dt);
+        arm.forwardDynamics(tau_hinf, q, qdot); // 한 스텝 적분
+        arm.forwardDynamicsNom(tau_hinf_nom, q_nom, qdot_nom); // 한 스텝 적분
+        std::cout<<e_dn.transpose()<<std::endl;
+
+        
 
         /*─────────────────────────────────────────────────────── */
 

@@ -12,6 +12,8 @@ extern "C"
 #include "TSTraj.h" /* Task-Space  Traj  */
 #include "HinfController.h"
 #include "TaskSpaceController.h"
+#include "FD_nom.h"
+#include "ID_nom.h"
 
 }
 
@@ -21,8 +23,11 @@ extern "C"
 void IndyDualArm::initModules_()
 {
     FD_initialize();
+    FD_nom_initialize();
+    
     FK_initialize();
     ID_initialize();
+    ID_nom_initialize();
     JSTraj_initialize();
     TSTraj_initialize();
     HinfController_initialize();
@@ -69,8 +74,11 @@ void IndyDualArm::terminate()
     TSTraj_terminate();
     JSTraj_terminate();
     ID_terminate();
+    ID_nom_terminate();
+    
     FK_terminate();
     FD_terminate();
+    FD_nom_terminate();
     HinfController_terminate();
     TaskSpaceController_terminate();
 }
@@ -179,6 +187,27 @@ void IndyDualArm::forwardDynamics(const Eigen::VectorXd &tau,
     COPY_TO(q_next.data(), FD_Y.q, DOF);
     COPY_TO(qd_next.data(), FD_Y.qdot, DOF);
 }
+void IndyDualArm::forwardDynamicsNom(const Eigen::VectorXd &tau,
+    Eigen::VectorXd &q_next,
+    Eigen::VectorXd &qd_next,
+    const Vector6d &Fext_r,
+    const Vector6d &Fext_l)
+{
+if (tau.size() != DOF)
+throw std::invalid_argument("tau size ≠ 12");
+
+COPY_FROM(tau.data(), FD_nom_U.tau, DOF);
+COPY_FROM(Fext_r.data(), FD_nom_U.Fext_r, 6);
+COPY_FROM(Fext_l.data(), FD_nom_U.Fext_l, 6);
+
+FD_nom_step();
+
+q_next.resize(DOF);
+qd_next.resize(DOF);
+COPY_TO(q_next.data(), FD_nom_Y.q, DOF);
+COPY_TO(qd_next.data(), FD_nom_Y.qdot, DOF);
+}
+
 
 /*───────── 2) Forward Kinematics ─────────────────────*/
 void IndyDualArm::forwardKinematics(const Eigen::VectorXd&      q,
@@ -243,6 +272,32 @@ void IndyDualArm::inverseDynamics(const Eigen::VectorXd &q_lr,
     
 }
 
+void IndyDualArm::inverseDynamicsNom(const Eigen::VectorXd &q_lr_nom,
+    const Eigen::VectorXd &qdot_lr_nom)
+{
+if (q_lr_nom.size() != DOF || qdot_lr_nom.size() != DOF)
+throw std::invalid_argument("q / qdot size ≠ 12");
+// Eigen::VectorXd q_lr_temp=q_lr;
+// q_lr_temp(0) +=3.141592;
+COPY_FROM(q_lr_nom.data(), ID_nom_U.q, DOF);
+COPY_FROM(qdot_lr_nom.data(), ID_nom_U.qdot, DOF);
+
+ID_nom_step();
+
+COPY_TO(this->nom_lr.M.data(), ID_nom_Y.M, DOF * DOF);
+
+COPY_TO(this->nom_lr.c.data(), ID_nom_Y.c, DOF);
+COPY_TO(this->nom_lr.g.data(), ID_nom_Y.g, DOF);
+
+this->nom_r.M = this->nom_lr.M.block<6,6>(6,6);
+this->nom_l.M = this->nom_lr.M.block<6,6>(0,0);
+this->nom_r.c = this->nom_lr.c.segment(6,6);
+this->nom_l.c = this->nom_lr.c.segment(0,6);
+this->nom_r.g = this->nom_lr.g.segment(6,6);
+this->nom_l.g = this->nom_lr.g.segment(0,6);
+
+}
+
 /*───────── 4) Joint-Space Trajectory ─────────────────*/
 void IndyDualArm::jointSpaceTrajectory(double t_sec,
                                        const Vector6d &q_start,
@@ -297,7 +352,7 @@ void IndyDualArm::taskSpaceTrajectory(double               t_sec,
 Eigen::VectorXd IndyDualArm::hinfController(
     const Eigen::VectorXd& q,
     const Eigen::VectorXd& qdot,
-    const Eigen::VectorXd& K)
+    const Eigen::VectorXd& K, const double &dt,Eigen::VectorXd &eint)
 {
 /* size-check 생략 … */
 Eigen::VectorXd       tau(12);
@@ -313,16 +368,39 @@ std::memcpy(HinfController_U.q_des,     des_lr.q.data(),   DOF*sizeof(double));
 std::memcpy(HinfController_U.qdot_des,  des_lr.qdot.data(),DOF*sizeof(double));
 std::memcpy(HinfController_U.qddot_des, des_lr.qddot.data(),DOF*sizeof(double));
 std::memcpy(HinfController_U.HinfK,     K.data(),       DOF*sizeof(double));
+std::memcpy(HinfController_U.eint,     eint.data(),       DOF*sizeof(double));
 
+HinfController_U.dt = dt;
 /* 1-step 실행 --------------------------------------------- */
 HinfController_step();
 
 /* 출력 ----------------------------------------------------- */
 tau.resize(DOF);
 std::memcpy(tau.data(), HinfController_Y.tau, DOF*sizeof(double));
+std::memcpy(eint.data(), HinfController_Y.eint, DOF*sizeof(double));
 return tau;
 }
+Eigen::VectorXd IndyDualArm::hinfControllerNom(
+    const Eigen::VectorXd& q_nom,
+    const Eigen::VectorXd& qdot_nom,
+    const Eigen::VectorXd& K_nom,
+    Eigen::VectorXd& eint,double dt)
+{
+/* size-check 생략 … */
+Eigen::VectorXd       tau_nom(12);
+Eigen::VectorXd qddot_ref(12);
 
+Eigen::VectorXd e(12),edot(12);
+e = des_lr.q-q_nom;
+
+edot = des_lr.qdot-qdot_nom;
+eint += e*dt;
+qddot_ref = des_lr.qddot + 20*edot + 100*e;
+
+tau_nom = nom_lr.M*qddot_ref+nom_lr.c+nom_lr.g + K_nom.asDiagonal()*(edot+20*e+100*eint);
+
+return tau_nom;
+}
 
 /* 전역 구조체는 codegen 헤더가 이미 선언
      extern ExtU_TaskSpaceController_T TaskSpaceController_U;

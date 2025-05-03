@@ -1,15 +1,15 @@
 /*
- * HinfController_data.c
+ * rtGetNaN.c
  *
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "HinfController".
+ * Code generation for model "FD_nom".
  *
- * Model version              : 1.15
+ * Model version              : 1.17
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C source code generated on : Fri May  2 19:03:22 2025
+ * C source code generated on : Sat May  3 19:10:21 2025
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -18,12 +18,17 @@
  * Validation result: Not run
  */
 
-#include "HinfController.h"
+#include "rtwtypes.h"
+#include "rtGetNaN.h"
 
-/* Block parameters (default storage) */
-P_HinfController_T HinfController_P = {
-  /* Expression: 0.0
-   * Referenced by: '<Root>/Delay'
-   */
-  0.0
-};
+/* Return rtNaN needed by the generated code. */
+real_T rtGetNaN(void)
+{
+  return rtNaN;
+}
+
+/* Return rtNaNF needed by the generated code. */
+real32_T rtGetNaNF(void)
+{
+  return rtNaNF;
+}

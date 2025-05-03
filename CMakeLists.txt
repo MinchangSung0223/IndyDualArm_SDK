@@ -28,6 +28,8 @@ add_subdirectory(codegen/JSTraj_grt_rtw)
 add_subdirectory(codegen/TSTraj_grt_rtw)
 add_subdirectory(codegen/HinfController_grt_rtw)
 add_subdirectory(codegen/TaskSpaceController_grt_rtw)
+add_subdirectory(codegen/FD_nom_grt_rtw)
+add_subdirectory(codegen/ID_nom_grt_rtw)
 
 # (각 하위 폴더는 STATIC 라이브러리만 내놓도록 add_executable 래핑됨)
 
@@ -41,12 +43,16 @@ target_include_directories(IndyDualArm
         $<INSTALL_INTERFACE:include>              # 설치 후 경로
         ${Eigen3_INCLUDE_DIRS}
         ${CMAKE_CURRENT_SOURCE_DIR}/codegen/FD_grt_rtw
+        ${CMAKE_CURRENT_SOURCE_DIR}/codegen/FD_nom_grt_rtw 
         ${CMAKE_CURRENT_SOURCE_DIR}/codegen/FK_grt_rtw
         ${CMAKE_CURRENT_SOURCE_DIR}/codegen/ID_grt_rtw
+        ${CMAKE_CURRENT_SOURCE_DIR}/codegen/ID_nom_grt_rtw
+ 
         ${CMAKE_CURRENT_SOURCE_DIR}/codegen/JSTraj_grt_rtw
         ${CMAKE_CURRENT_SOURCE_DIR}/codegen/TSTraj_grt_rtw
         ${CMAKE_CURRENT_SOURCE_DIR}/codegen/HinfController_grt_rtw
         ${CMAKE_CURRENT_SOURCE_DIR}/codegen/TaskSpaceController_grt_rtw
+
         ${MATLAB_ROOT}/extern/include
         ${MATLAB_ROOT}/simulink/include
         ${MATLAB_ROOT}/rtw/c/src
@@ -84,6 +90,8 @@ target_link_libraries(IndyDualArm
     TSTraj
     HinfController
     TaskSpaceController
+    FD_nom
+    ID_nom
 )
 
 set_target_properties(IndyDualArm PROPERTIES

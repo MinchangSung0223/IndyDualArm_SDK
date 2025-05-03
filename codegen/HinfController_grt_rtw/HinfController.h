@@ -7,9 +7,9 @@
  *
  * Code generation for model "HinfController".
  *
- * Model version              : 1.15
+ * Model version              : 2.10
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C source code generated on : Fri May  2 19:03:22 2025
+ * C source code generated on : Sat May  3 21:47:03 2025
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -76,11 +76,6 @@
 #define rtmGetTPtr(rtm)                (&(rtm)->Timing.taskTime0)
 #endif
 
-/* Block states (default storage) for system '<Root>' */
-typedef struct {
-  real_T Delay_DSTATE[12];             /* '<Root>/Delay' */
-} DW_HinfController_T;
-
 /* External inputs (root inport signals with default storage) */
 typedef struct {
   real_T M[144];                       /* '<Root>/M' */
@@ -92,20 +87,15 @@ typedef struct {
   real_T qdot_des[12];                 /* '<Root>/qdot_des' */
   real_T qddot_des[12];                /* '<Root>/qddot_des' */
   real_T HinfK[12];                    /* '<Root>/HinfK' */
-  real_T dt[12];                       /* '<Root>/dt' */
+  real_T dt;                           /* '<Root>/dt' */
+  real_T eint[12];                     /* '<Root>/eint ' */
 } ExtU_HinfController_T;
 
 /* External outputs (root outports fed by signals with default storage) */
 typedef struct {
   real_T tau[12];                      /* '<Root>/tau' */
+  real_T eint[12];                     /* '<Root>/eint' */
 } ExtY_HinfController_T;
-
-/* Parameters (default storage) */
-struct P_HinfController_T_ {
-  real_T Delay_InitialCondition;       /* Expression: 0.0
-                                        * Referenced by: '<Root>/Delay'
-                                        */
-};
 
 /* Real-time Model Data Structure */
 struct tag_RTM_HinfController_T {
@@ -126,12 +116,6 @@ struct tag_RTM_HinfController_T {
     boolean_T stopRequestedFlag;
   } Timing;
 };
-
-/* Block parameters (default storage) */
-extern P_HinfController_T HinfController_P;
-
-/* Block states (default storage) */
-extern DW_HinfController_T HinfController_DW;
 
 /* External inputs (root inport signals with default storage) */
 extern ExtU_HinfController_T HinfController_U;

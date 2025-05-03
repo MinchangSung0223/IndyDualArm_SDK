@@ -7,9 +7,9 @@
  *
  * Code generation for model "HinfController".
  *
- * Model version              : 1.15
+ * Model version              : 2.10
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C source code generated on : Fri May  2 19:03:22 2025
+ * C source code generated on : Sat May  3 21:47:03 2025
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -27,9 +27,6 @@
 #ifndef SS_INT64
 #define SS_INT64                       18
 #endif
-
-/* Parameters (default storage) */
-typedef struct P_HinfController_T_ P_HinfController_T;
 
 /* Forward declaration for rtModel */
 typedef struct tag_RTM_HinfController_T RT_MODEL_HinfController_T;

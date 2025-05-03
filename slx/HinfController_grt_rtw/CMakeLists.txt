@@ -48,7 +48,6 @@ find_library(FOUND_LIBM m NO_SYSTEM_ENVIRONMENT_PATH PATHS ${CMAKE_C_IMPLICIT_LI
 # Definition of target "HinfController".
 add_executable(HinfController  ${MATLAB_ROOT}/rtw/c/src/rt_logging.c
     ${START_DIR}/HinfController_grt_rtw/HinfController.c
-    ${START_DIR}/HinfController_grt_rtw/HinfController_data.c
     ${START_DIR}/HinfController_grt_rtw/rt_nonfinite.c
     ${MATLAB_ROOT}/rtw/c/src/common/rt_main.c)
 

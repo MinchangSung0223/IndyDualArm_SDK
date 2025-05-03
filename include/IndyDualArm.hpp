@@ -142,6 +142,10 @@ Eigen::Matrix<double, 12, 1> qdot_max;   //!< 속도 상한 [rad/s]
     Arm l;       //!< 왼팔 동역학/기구학 결과
     Arm r;       //!< 오른팔 동역학/기구학 결과
     RelArm lr;   //!< 전체 12-DoF 동역학/기구학 결과
+    Arm nom_l;       //!< 왼팔 동역학/기구학 결과
+    Arm nom_r;       //!< 오른팔 동역학/기구학 결과
+    RelArm nom_lr;   //!< 전체 12-DoF 동역학/기구학 결과
+    
     Des des_l;   //!< 왼팔 목표 궤적
     Des des_r;   //!< 오른팔 목표 궤적
     RelDes des_lr; //!< 통합 12-DoF 목표 궤적
@@ -158,7 +162,11 @@ Eigen::Matrix<double, 12, 1> qdot_max;   //!< 속도 상한 [rad/s]
                          Eigen::VectorXd &qd_next,
                          const Vector6d &Fext_r = Vector6d::Zero(),
                          const Vector6d &Fext_l = Vector6d::Zero());
-
+    void forwardDynamicsNom(const Eigen::VectorXd &tau,
+                            Eigen::VectorXd &q_next,
+                            Eigen::VectorXd &qd_next,
+                            const Vector6d &Fext_r = Vector6d::Zero(),
+                            const Vector6d &Fext_l = Vector6d::Zero());
     /* 2) Forward Kinematics : q → Tₗ, Tᵣ */
     void forwardKinematics(const Eigen::VectorXd &q, const Eigen::VectorXd &qdot);
 
@@ -167,7 +175,16 @@ Eigen::Matrix<double, 12, 1> qdot_max;   //!< 속도 상한 [rad/s]
                          const Eigen::VectorXd &qdot);
 
     /* … 앞부분 동일 … */
-
+    Eigen::VectorXd NRIC(const Eigen::VectorXd &HinfK, const Eigen::VectorXd &q_r, const Eigen::VectorXd &qdot_r,const Eigen::VectorXd&q_n,const Eigen::VectorXd &qdot_n, Eigen::VectorXd &eint_nr,double dt){
+        Eigen::VectorXd e_nr,edot_nr,tau_a;
+        e_nr = q_n-q_r;
+        edot_nr= qdot_n-qdot_r;
+        eint_nr +=dt*e_nr;
+        tau_a = HinfK.asDiagonal()*(edot_nr+20.0*e_nr+100.0*eint_nr);
+        return tau_a;
+    }
+    void inverseDynamicsNom(const Eigen::VectorXd &q_lr_nom,
+        const Eigen::VectorXd &qdot_lr_nom);
     /* 4) Joint-Space Trajectory : (t, qₛ, qₑ, T0, Tf) → (q_d, q̇_d, q̈_d) */
     void jointSpaceTrajectory(double t_sec,
                               const Vector6d &q_start,
@@ -214,10 +231,14 @@ Eigen::Matrix<double, 12, 1> qdot_max;   //!< 속도 상한 [rad/s]
      * @return 토크 출력 τ (12×1)
      */
     Eigen::VectorXd hinfController(
-        const Eigen::VectorXd &q,
-        const Eigen::VectorXd &qdot,
-        const Eigen::VectorXd &K);
-
+        const Eigen::VectorXd& q,
+        const Eigen::VectorXd& qdot,
+        const Eigen::VectorXd& K, const double &dt,Eigen::VectorXd &eint);
+        Eigen::VectorXd hinfControllerNom(
+            const Eigen::VectorXd& q_nom,
+            const Eigen::VectorXd& qdot_nom,
+            const Eigen::VectorXd& K_nom,
+            Eigen::VectorXd& eint,double dt);
     /**
      * @brief Task-space controller (SPD + QP) 기반 토크 계산
      * 
