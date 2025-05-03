@@ -46,7 +46,7 @@ find_library(FOUND_LIBM m NO_SYSTEM_ENVIRONMENT_PATH PATHS ${CMAKE_C_IMPLICIT_LI
 ###########################################################################
 
 # Definition of target "FK".
-add_library(FK STATIC ${MATLAB_ROOT}/rtw/c/src/rt_logging.c
+add_library(FK STATIC  ${MATLAB_ROOT}/rtw/c/src/rt_logging.c
     ${START_DIR}/FK_grt_rtw/FK.c
     ${START_DIR}/FK_grt_rtw/FK_data.c
     ${START_DIR}/FK_grt_rtw/rt_nonfinite.c

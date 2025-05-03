@@ -74,9 +74,9 @@ int main()
         VectorXd tau_hinf = arm.hinfController(q, qdot, HinfK);
         VectorXd tau_tsc = arm.taskSpaceController(q, qdot, dt, TaskKp, TaskKv, b0, a, HinfK);
         VectorXd tau(12);
-  
+        std::cout<<arm.lr.g.transpose()<<std::endl;
 
-        arm.forwardDynamics(tau_tsc, q, qdot); // 한 스텝 적분
+        // arm.forwardDynamics(tau_tsc, q, qdot); // 한 스텝 적분
 
         /*─────────────────────────────────────────────────────── */
 
