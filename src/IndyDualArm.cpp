@@ -301,7 +301,39 @@ std::memcpy(arm_lr.V.data()  , FK_Y.V_lr  ,  6*sizeof(double));
 
 
 }
+void IndyDualArm::updateFK(const Eigen::VectorXd&q,
+    const Eigen::VectorXd& qdot, IndyDualArm::Arm &arm_l,IndyDualArm::Arm &arm_r,IndyDualArm::RelArm &arm_lr,const Eigen::Matrix<double, 6, 7> &lambda_l, const Eigen::Matrix<double, 6, 7> &lambda_r, const Eigen::Matrix<double, 6, 13> &lambda_lr)
+{
+/* ─── 입력 유효성 검사 ─── */
+if(q.size()!=DOF || qdot.size()!=DOF)
+throw std::invalid_argument("q / qdot size must be 12");
 
+/* ─── ExtU 에 복사 ─── */
+std::memcpy(FK_U.q     , q.data()    , DOF*sizeof(double));
+std::memcpy(FK_U.qdot  , qdot.data() , DOF*sizeof(double));
+std::memcpy(FK_U.lambda_l , lambda_l.data() , 42 * sizeof(double));
+std::memcpy(FK_U.lambda_r , lambda_r.data() , 42 * sizeof(double));
+std::memcpy(FK_U.lambda_lr,lambda_lr.data(), 78 * sizeof(double));
+
+/* 1-step 수행 */
+FK_step();
+
+/* ─── 필수 출력 ─── */
+std::memcpy(arm_l.T .data(), FK_Y.T_l , 16*sizeof(double));
+std::memcpy(arm_r.T.data(), FK_Y.T_r , 16*sizeof(double));
+std::memcpy(arm_lr.T.data(), FK_Y.T_lr , 16*sizeof(double));
+std::memcpy(arm_l.J.data() , FK_Y.Jb_l , 36*sizeof(double));
+std::memcpy(arm_r.J.data() , FK_Y.Jb_r , 36*sizeof(double));
+std::memcpy(arm_lr.J.data(), FK_Y.Jb_lr, 72*sizeof(double));
+std::memcpy(arm_l.Jdot.data() , FK_Y.Jbdot_l , 36*sizeof(double));
+std::memcpy(arm_r.Jdot.data() , FK_Y.Jbdot_r , 36*sizeof(double));
+std::memcpy(arm_lr.Jdot.data(), FK_Y.Jbdot_lr, 72*sizeof(double));
+std::memcpy(arm_l.V.data()  , FK_Y.V_l  ,  6*sizeof(double));
+std::memcpy(arm_r.V.data()  , FK_Y.V_r  ,  6*sizeof(double));
+std::memcpy(arm_lr.V.data()  , FK_Y.V_lr  ,  6*sizeof(double));
+
+
+}
 
 /*───────── 3) Inverse Dynamics ───────────────────────*/
 // /* 3) Inverse Dynamics : (q,q̇,q̈) → (M,c,g) */

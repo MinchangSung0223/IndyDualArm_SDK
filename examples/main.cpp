@@ -76,17 +76,23 @@ int main()
     eint_dn.setZero();
     eint_dr.setZero();
    
-    
+    	
+	IndyDualArm::Des task_des_l;
+	IndyDualArm::Des task_des_r;
+	IndyDualArm::Des joint_des_l;
+	IndyDualArm::Des joint_des_r;
+	IndyDualArm::RelDes joint_des_lr;
+
     while (t < Tf + 2.0)
     {
 
     //     /*───────────────────────────Controller ─────────────────────────── */
 
-       IndyDualArm::Des task_des_l=arm.taskSpaceTrajectory(t, T_start_l, T_end_l, 9, 9.1);
-       IndyDualArm::Des task_des_r=arm.taskSpaceTrajectory(t, T_start_r, T_end_r, 9, 9.1);
-       IndyDualArm::Des joint_des_l=arm.jointSpaceTrajectory(t, q_init.segment(0,6), q_init.segment(6,6), 0, 10);
-       IndyDualArm::Des joint_des_r=arm.jointSpaceTrajectory(t, q_init.segment(6,6), q_init.segment(0,6), 0, 10);
-       IndyDualArm::RelDes joint_des_lr= arm.setTraj(joint_des_l, joint_des_r);
+        task_des_l=arm.taskSpaceTrajectory(t, T_start_l, T_end_l, 9, 9.1);
+        task_des_r=arm.taskSpaceTrajectory(t, T_start_r, T_end_r, 9, 9.1);
+        joint_des_l=arm.jointSpaceTrajectory(t, q_init.segment(0,6), q_init.segment(6,6), 0, 10);
+        joint_des_r=arm.jointSpaceTrajectory(t, q_init.segment(6,6), q_init.segment(0,6), 0, 10);
+        joint_des_lr= arm.setTraj(joint_des_l, joint_des_r);
        
         arm.updateFK(q,qdot,l,r,lr);
         arm.updateID(q,qdot,l,r,lr);
@@ -103,7 +109,7 @@ int main()
 
         arm.forwardDynamics(tau_tsc+tau_a, q, qdot);        // 한 스텝 적분
         arm.forwardDynamicsNom(tau_tsc_nom, q_nom, qdot_nom); // 한 스텝 적분
-        // std::cout<<e_dn.transpose()<<std::endl;
+        std::cout<<joint_des_lr.q.transpose()<<std::endl;
 
         /*─────────────────────────────────────────────────────── */
 

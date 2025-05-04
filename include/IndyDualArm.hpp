@@ -178,7 +178,8 @@ Eigen::Matrix<double, 12, 1> qdot_max;   //!< 속도 상한 [rad/s]
     /* 2) Forward Kinematics : q → Tₗ, Tᵣ */
     void updateFK(const Eigen::VectorXd&q,
         const Eigen::VectorXd& qdot, Arm &arm_l,Arm &arm_r,RelArm &arm_lr);
-
+        void updateFK(const Eigen::VectorXd&q,
+            const Eigen::VectorXd& qdot, Arm &arm_l,Arm &arm_r,RelArm &arm_lr,const Eigen::Matrix<double, 6, 7> &lambda_l, const Eigen::Matrix<double, 6, 7> &lambda_r, const Eigen::Matrix<double, 6, 13> &lambda_lr);
     /* 3) Inverse Dynamics : (q,q̇,q̈) → (M,c,g) */
     void updateID(const Eigen::VectorXd&q,
         const Eigen::VectorXd& qdot, Arm &arm_l,Arm &arm_r,RelArm &arm_lr);
