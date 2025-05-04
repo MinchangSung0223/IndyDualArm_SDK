@@ -57,8 +57,8 @@ int main()
     T_start_lr = lr.T;
     T_end_l = T_start_l;
     T_end_r = T_start_r;
-    T_end_l(0,3) +=0.1;
-    T_end_r(0,3) +=0.1;
+    T_end_l(1,3) +=0.1;
+    T_end_r(1,3) +=0.1;
 
     T_end_lr = T_start_lr;
     
@@ -82,7 +82,11 @@ int main()
 	IndyDualArm::Des joint_des_l;
 	IndyDualArm::Des joint_des_r;
 	IndyDualArm::RelDes joint_des_lr;
+    Eigen::VectorXd q_max = Eigen::VectorXd::Ones(12)*3.141592;
+    Eigen::VectorXd q_min = Eigen::VectorXd::Ones(12)*(-3.141592);
 
+    Eigen::VectorXd qdot_max = Eigen::VectorXd::Ones(12)*3.141592;
+    Eigen::VectorXd qdot_min = Eigen::VectorXd::Ones(12)*(-3.141592);
     while (t < Tf + 2.0)
     {
 
@@ -102,8 +106,8 @@ int main()
         VectorXd tau_hinf = arm.HinfControl(lr,q, qdot, joint_des_lr, eint_dr, dt, HinfK, gamma);
         VectorXd tau_hinf_nom = arm.HinfControl(nom_lr,q_nom, qdot_nom, joint_des_lr, eint_dn, dt, HinfK, gamma);
  
-        VectorXd tau_tsc = arm.taskSpaceController(l,r,lr,q, qdot, task_des_l, task_des_r, dt, TaskKp, TaskKv, b0, a, HinfK2);
-        VectorXd tau_tsc_nom = arm.taskSpaceController(nom_l,nom_r,nom_lr,q_nom, qdot_nom, task_des_l, task_des_r, dt, TaskKp, TaskKv, b0, a, HinfK2);
+        VectorXd tau_tsc = arm.taskSpaceController(l,r,lr,q, qdot, task_des_l, task_des_r, dt,q_init,q_max,q_min,qdot_max,qdot_min, TaskKp, TaskKv, b0, a, HinfK2);
+        VectorXd tau_tsc_nom = arm.taskSpaceController(nom_l,nom_r,nom_lr,q_nom, qdot_nom, task_des_l, task_des_r, dt,q_init,q_max,q_min,qdot_max,qdot_min, TaskKp, TaskKv, b0, a, HinfK2);
         VectorXd tau_a = arm.NRIC(HinfK, q, qdot, q_nom, qdot_nom, eint_nr, dt);
 
 

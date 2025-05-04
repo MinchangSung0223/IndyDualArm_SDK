@@ -10,7 +10,16 @@ option(BUILD_SIM_EXE      "Build Simulink test executables" OFF)
 set(MATLAB_ROOT "/usr/local/MATLAB/R2024b" CACHE PATH "MATLAB root dir")
 # 설치 시 경로(prefix)는 cmake -DCMAKE_INSTALL_PREFIX=<dir> 로 지정가능
 # ─────────────────────────────────────────────────────────────────────
+# CMAKE_BUILD_TYPE이 비어있으면 Release로 초기화
+if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
+  message(STATUS "No build type specified. Defaulting to Release.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
 
+# Release 외에는 에러
+if (NOT CMAKE_BUILD_TYPE STREQUAL "Release")
+  message(FATAL_ERROR "This project only supports Release build. Current: ${CMAKE_BUILD_TYPE}")
+endif()
 # ▸ 컴파일러 공통 설정
 set(CMAKE_C_STANDARD   99)
 set(CMAKE_CXX_STANDARD 17)
