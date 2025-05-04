@@ -11,19 +11,21 @@ constexpr long CYCLE_NS = 1'000'000; // 1 ms = 1 kHz
 int main()
 {
     /* ── (1) 시뮬레이터 컨텍스트 ───────────────────────── */
-    SimCtx ctx("../indy7/indy7_dualArm.urdf");
+    SimCtx ctx("../indy7/indy7_dualArm.urdf","../indy7/indy7_dualArm_vis.urdf");
 
     /* ── (2) IndyDualArm 래퍼 ─────────────────────────── */
     IndyDualArm arm;
-    
-    VectorXd q(12),qdot(12),q_nom(12), qdot_nom(12);
+    IndyDualArm::Arm l,r,nom_l,nom_r;
+    IndyDualArm::RelArm lr,nom_lr;
+    VectorXd q(12), qdot(12), q_nom(12), qdot_nom(12), q_init(12);
     qdot.setZero();
     qdot_nom.setZero();
     q << 0.165747, 0.819274, 1.26369, 0.604148, 1.0515, -0.139217,
         -0.165747, -0.819274, -1.26369, -0.604148, -1.0515, 0.139217;
+    q_init = q;
     q_nom = q;
-    arm.initialize(q);
-
+    std::string urdf_path = "../indy7/indy7_dualArm.urdf";
+    arm.initialize(urdf_path, q);
 
     const double Tf = 100.0; // [s] 시뮬 길이
     double t = 0.0;
@@ -31,27 +33,35 @@ int main()
     int visCnt = 0;
     timespec wake{};
     clock_gettime(CLOCK_MONOTONIC, &wake);
-    spdlog::info("=== simulation start ===");
+    std::cout<<"aaaaaaaaaa";
 
-    arm.des_l.q_start = q.segment(0, 6);
-    arm.des_l.q_end = q.segment(6, 6);
-    arm.des_r.q_start = q.segment(6, 6);
-    arm.des_r.q_end = q.segment(0, 6);
+    // spdlog::info("=== simulation start ===");
+    // std::cout<<"aaaaaaaaaa";
 
-    VectorXd HinfK(12);
-    HinfK << 500, 500, 100, 50, 10, 1, 500, 500, 100, 50, 10, 1;
-    VectorXd eint(12);
-    eint.setZero();
+
+    VectorXd HinfK(12), gamma(12),HinfK2(12);
+    HinfK << 50, 50, 25, 15, 5, 0.5, 50, 50, 25, 15, 5, 0.5;
+    HinfK2<<500,500,300,100,50,1,500,500,300,100,50,1;
+    gamma << 1000, 800, 800, 500, 500, 300, 1000, 800, 800, 500, 500, 300;
     double dt = 0.001;
+    // std::cout<<"aaaaaaaaaa";
 
-    arm.forwardKinematics(q, VectorXd::Zero(12));
-    arm.des_l.T_start = arm.l.T;
-    arm.des_l.T_end = arm.des_l.T_start;
-    arm.des_l.T_end(2, 3) = arm.des_l.T_end(2, 3) + 0.5;
-    arm.des_r.T_start = arm.r.T;
-    arm.des_r.T_end = arm.des_r.T_start;
-    arm.des_r.T_end(2, 3) = arm.des_r.T_end(2, 3) + 0.5;
+    Eigen::Matrix4d T_start_l,T_start_r,T_start_lr;
+    Eigen::Matrix4d T_end_l,T_end_r,T_end_lr;
+    Eigen::MatrixXd J_l(6,6),J_r(6,6),J_lr(6,12),Jdot_l(6,6),Jdot_r(6,6),Jdot_lr(6,12);
+    Vector6d V_l,V_r,V_lr;
 
+    arm.updateFK(q,qdot,l,r,lr);
+    T_start_l = l.T;
+    T_start_r = r.T;
+    T_start_lr = lr.T;
+    T_end_l = T_start_l;
+    T_end_r = T_start_r;
+    T_end_l(0,3) +=0.1;
+    T_end_r(0,3) +=0.1;
+
+    T_end_lr = T_start_lr;
+    
     VectorXd TaskKp(12), TaskKv(12);
     Vector2d b0;
     Vector2d a;
@@ -61,46 +71,46 @@ int main()
 
     b0 << 100, 100;
     a << 0.01, 0.01;
-    VectorXd eint_nr(12),eint_dn(12),eint_dr(12);
+    VectorXd eint_nr(12), eint_dn(12), eint_dr(12);
     eint_nr.setZero();
     eint_dn.setZero();
     eint_dr.setZero();
+   
+    
     while (t < Tf + 2.0)
     {
 
-        /*───────────────────────────Controller ─────────────────────────── */
+    //     /*───────────────────────────Controller ─────────────────────────── */
 
-        arm.taskSpaceTrajectory(t, arm.des_l.T_start, arm.des_l.T_end, 0, 10, arm.des_l);
-        arm.taskSpaceTrajectory(t, arm.des_r.T_start, arm.des_r.T_end, 0, 10, arm.des_r);
-        arm.jointSpaceTrajectory(t, arm.des_l.q_start, arm.des_l.q_end, 0, 10, arm.des_l);
-        arm.jointSpaceTrajectory(t, arm.des_r.q_start, arm.des_r.q_end, 0, 10, arm.des_r);
-        arm.setTraj(arm.des_l, arm.des_r);
+       IndyDualArm::Des task_des_l=arm.taskSpaceTrajectory(t, T_start_l, T_end_l, 9, 9.1);
+       IndyDualArm::Des task_des_r=arm.taskSpaceTrajectory(t, T_start_r, T_end_r, 9, 9.1);
+       IndyDualArm::Des joint_des_l=arm.jointSpaceTrajectory(t, q_init.segment(0,6), q_init.segment(6,6), 0, 10);
+       IndyDualArm::Des joint_des_r=arm.jointSpaceTrajectory(t, q_init.segment(6,6), q_init.segment(0,6), 0, 10);
+       IndyDualArm::RelDes joint_des_lr= arm.setTraj(joint_des_l, joint_des_r);
+       
+        arm.updateFK(q,qdot,l,r,lr);
+        arm.updateID(q,qdot,l,r,lr);
+        arm.updateFK(q_nom,qdot_nom,nom_l,nom_r,nom_lr);
+        arm.updateID(q_nom,qdot_nom,nom_l,nom_r,nom_lr); 
 
-        arm.forwardKinematics(q, qdot);
-        arm.inverseDynamics(q, qdot);
-        arm.inverseDynamicsNom(q_nom, qdot_nom);
-        
-        VectorXd tau_hinf = arm.hinfController(q, qdot, HinfK*0.1,0.001,eint_dr);
-        VectorXd e_dn = arm.des_lr.q - q_nom;
-        VectorXd edot_dn = arm.des_lr.qdot - qdot_nom;
-        eint_dn = eint_dn+ e_dn*dt;
-        VectorXd tau_hinf_nom = arm.nom_lr.M*(arm.des_lr.qddot+20*edot_dn+100*e_dn)+arm.nom_lr.c +arm.nom_lr.g+0.1*HinfK.asDiagonal()*(edot_dn+20.0*e_dn+100.0*eint_dn);
-        
+        VectorXd tau_hinf = arm.HinfControl(lr,q, qdot, joint_des_lr, eint_dr, dt, HinfK, gamma);
+        VectorXd tau_hinf_nom = arm.HinfControl(nom_lr,q_nom, qdot_nom, joint_des_lr, eint_dn, dt, HinfK, gamma);
+ 
+        VectorXd tau_tsc = arm.taskSpaceController(l,r,lr,q, qdot, task_des_l, task_des_r, dt, TaskKp, TaskKv, b0, a, HinfK2);
+        VectorXd tau_tsc_nom = arm.taskSpaceController(nom_l,nom_r,nom_lr,q_nom, qdot_nom, task_des_l, task_des_r, dt, TaskKp, TaskKv, b0, a, HinfK2);
+        VectorXd tau_a = arm.NRIC(HinfK, q, qdot, q_nom, qdot_nom, eint_nr, dt);
 
-        VectorXd tau_tsc = arm.taskSpaceController(q, qdot, dt, TaskKp, TaskKv, b0, a, HinfK);
-        // VectorXd tau_a = arm.NRIC(HinfK*0.001,q,qdot,q_nom,qdot_nom,eint_nr,dt);
-        arm.forwardDynamics(tau_hinf, q, qdot); // 한 스텝 적분
-        arm.forwardDynamicsNom(tau_hinf_nom, q_nom, qdot_nom); // 한 스텝 적분
-        std::cout<<e_dn.transpose()<<std::endl;
 
-        
+        arm.forwardDynamics(tau_tsc+tau_a, q, qdot);        // 한 스텝 적분
+        arm.forwardDynamicsNom(tau_tsc_nom, q_nom, qdot_nom); // 한 스텝 적분
+        // std::cout<<e_dn.transpose()<<std::endl;
 
         /*─────────────────────────────────────────────────────── */
 
         /* ── 60 Hz 시각화 ─────────────────────────── */
         if (++visCnt >= visDiv)
         {
-            ctx.render(q);
+            ctx.render(q,q_nom);
             visCnt = 0;
         }
         /* 주기 동기화 (1 ms) ------------------------ */

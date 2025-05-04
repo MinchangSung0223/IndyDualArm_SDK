@@ -18,6 +18,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)           # 모든 타겟에 -fPIC
 
 # ▸ Eigen (header-only)
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)       # apt install libeigen3-dev
+find_package(pinocchio REQUIRED)
 # ─────────────────────────────────────────────────────────────────────
 
 # ▸ codegen 라이브러리 포함
@@ -78,6 +79,8 @@ target_include_directories(IndyDualArm
         ${MATLAB_ROOT}/simulink/include
         ${MATLAB_ROOT}/rtw/c/src
         ${MATLAB_ROOT}/rtw/c/src/ext_mode/common
+        ${pinocchio_INCLUDE_DIRS}
+
         
 )
 target_link_libraries(IndyDualArm
@@ -92,6 +95,7 @@ target_link_libraries(IndyDualArm
     TaskSpaceController
     FD_nom
     ID_nom
+    pinocchio::pinocchio
 )
 
 set_target_properties(IndyDualArm PROPERTIES

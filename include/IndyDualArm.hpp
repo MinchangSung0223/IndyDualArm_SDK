@@ -2,6 +2,7 @@
  * IndyDualArm.hpp   —   Indy7 Dual-Arm Eigen Wrapper
  *──────────────────────────────────────────────────────────*/
 #pragma once
+
 #include <Eigen/Core>
 #include <cstddef>
 
@@ -22,6 +23,9 @@ constexpr std::size_t DOF = 12; // 6 DoF × 2 arms
 class IndyDualArm
 {
 public:
+IndyDualArm();
+~IndyDualArm();
+
     /**
  * @brief   단일 팔(6-DoF) 동역학/기구학 결과 구조체
  *
@@ -32,6 +36,7 @@ public:
         Eigen::Matrix<double,6,6> M;   //!< 관절질량행렬 @f$M(q)@f$
         Eigen::Matrix<double,6,1> c;   //!< 코리올리/원심 항 @f$c(q,\dot q)@f$
         Eigen::Matrix<double,6,1> g;   //!< 중력 토크 @f$g(q)@f$
+        Eigen::Matrix<double,6,6> C;   //!< 코리올리/원심 항 @f$c(q,\dot q)@f$
 
         Eigen::Matrix4d           T;   //!< TCP 좌표계 - base 변환 (SE3)
         Vector6d                  V;   //!< TCP twist @f$[v;\,\omega]@f$
@@ -118,6 +123,7 @@ struct RelArm
     Eigen::Matrix<double,12,12> M;   //!< @brief 관성행렬 @f$M(q)@f$
     Eigen::Matrix<double,12,1>  c;   //!< @brief 코리올리/원심 @f$c(q,\dot q)@f$
     Eigen::Matrix<double,12,1>  g;   //!< @brief 중력항     @f$g(q)@f$
+    Eigen::Matrix<double,12,12> C;   //!< 코리올리/원심 항 @f$c(q,\dot q)@f$
 
     /* ─── Task-space 상대 값 ─── */
     Eigen::Matrix4d  T;               //!< @brief 상대 HT @f$T_{\mathrm{rel}}@f$
@@ -138,20 +144,22 @@ Eigen::Matrix<double, 12, 1> q_max;      //!< 관절 상한 [rad]
 Eigen::Matrix<double, 12, 1> qdot_min;   //!< 속도 하한 [rad/s]
 Eigen::Matrix<double, 12, 1> qdot_max;   //!< 속도 상한 [rad/s]
 
-
-    Arm l;       //!< 왼팔 동역학/기구학 결과
-    Arm r;       //!< 오른팔 동역학/기구학 결과
-    RelArm lr;   //!< 전체 12-DoF 동역학/기구학 결과
-    Arm nom_l;       //!< 왼팔 동역학/기구학 결과
-    Arm nom_r;       //!< 오른팔 동역학/기구학 결과
-    RelArm nom_lr;   //!< 전체 12-DoF 동역학/기구학 결과
+  
+    // Arm l;       //!< 왼팔 동역학/기구학 결과
+    // Arm r;       //!< 오른팔 동역학/기구학 결과
+    // RelArm lr;   //!< 전체 12-DoF 동역학/기구학 결과
+    // Arm nom_l;       //!< 왼팔 동역학/기구학 결과
+    // Arm nom_r;       //!< 오른팔 동역학/기구학 결과
+    // RelArm nom_lr;   //!< 전체 12-DoF 동역학/기구학 결과
     
-    Des des_l;   //!< 왼팔 목표 궤적
-    Des des_r;   //!< 오른팔 목표 궤적
-    RelDes des_lr; //!< 통합 12-DoF 목표 궤적
+    // Des des_l;   //!< 왼팔 목표 궤적
+    // Des des_r;   //!< 오른팔 목표 궤적
+    // RelDes des_lr; //!< 통합 12-DoF 목표 궤적
     /* Life-cycle */
     void initialize();                              ///< FD/FK/ID/JSTraj/TSTraj 모두 *_initialize()
     void initialize(const Eigen::VectorXd &q_init); ///< FD/FK/ID/JSTraj/TSTraj 모두 *_initialize()
+    void initialize(const std::string& urdf_path,const Eigen::VectorXd &q_init);//pinocchio
+    
     void initialize(const Eigen::VectorXd &q0, const Eigen::Matrix<double, 6, 7> &lambda_l, const Eigen::Matrix<double, 6, 7> &lambda_r, const Eigen::Matrix<double, 6, 13> &lambda_lr);
     void initialize(const Eigen::VectorXd &q0, const Eigen::Matrix<double, 12, 1> &q_min, const Eigen::Matrix<double, 12, 1> &q_max, const Eigen::Matrix<double, 12, 1> &qdot_min, const Eigen::Matrix<double, 12, 1> &qdot_max);
 
@@ -168,11 +176,12 @@ Eigen::Matrix<double, 12, 1> qdot_max;   //!< 속도 상한 [rad/s]
                             const Vector6d &Fext_r = Vector6d::Zero(),
                             const Vector6d &Fext_l = Vector6d::Zero());
     /* 2) Forward Kinematics : q → Tₗ, Tᵣ */
-    void forwardKinematics(const Eigen::VectorXd &q, const Eigen::VectorXd &qdot);
+    void updateFK(const Eigen::VectorXd&q,
+        const Eigen::VectorXd& qdot, Arm &arm_l,Arm &arm_r,RelArm &arm_lr);
 
     /* 3) Inverse Dynamics : (q,q̇,q̈) → (M,c,g) */
-    void inverseDynamics(const Eigen::VectorXd &q,
-                         const Eigen::VectorXd &qdot);
+    void updateID(const Eigen::VectorXd&q,
+        const Eigen::VectorXd& qdot, Arm &arm_l,Arm &arm_r,RelArm &arm_lr);
 
     /* … 앞부분 동일 … */
     Eigen::VectorXd NRIC(const Eigen::VectorXd &HinfK, const Eigen::VectorXd &q_r, const Eigen::VectorXd &qdot_r,const Eigen::VectorXd&q_n,const Eigen::VectorXd &qdot_n, Eigen::VectorXd &eint_nr,double dt){
@@ -183,15 +192,14 @@ Eigen::Matrix<double, 12, 1> qdot_max;   //!< 속도 상한 [rad/s]
         tau_a = HinfK.asDiagonal()*(edot_nr+20.0*e_nr+100.0*eint_nr);
         return tau_a;
     }
-    void inverseDynamicsNom(const Eigen::VectorXd &q_lr_nom,
-        const Eigen::VectorXd &qdot_lr_nom);
+    // void inverseDynamicsNom(const Eigen::VectorXd &q_lr_nom,
+    //     const Eigen::VectorXd &qdot_lr_nom);
     /* 4) Joint-Space Trajectory : (t, qₛ, qₑ, T0, Tf) → (q_d, q̇_d, q̈_d) */
-    void jointSpaceTrajectory(double t_sec,
-                              const Vector6d &q_start,
-                              const Vector6d &q_end,
-                              double T0,
-                              double Tf,
-                              Des &des);
+    Des jointSpaceTrajectory(double t_sec,
+        const Vector6d &q_start,
+        const Vector6d &q_end,
+        double T0,
+        double Tf );
 
   /**
      * @brief des_l, des_r 궤적을 통합하여 des_lr (12-DoF)로 설정합니다.
@@ -201,44 +209,25 @@ Eigen::Matrix<double, 12, 1> qdot_max;   //!< 속도 상한 [rad/s]
      * @param des_l 왼팔 궤적 (q, qdot, qddot)
      * @param des_r 오른팔 궤적 (q, qdot, qddot)
      */
-    void setTraj(const Des &des_l, const Des &des_r)
+    RelDes setTraj(const Des &des_l, const Des &des_r)
     {
+        RelDes des_lr;
         des_lr.q.segment(0, 6) = des_l.q;
         des_lr.qdot.segment(0, 6) = des_l.qdot;
         des_lr.qddot.segment(0, 6) = des_l.qddot;
         des_lr.q.segment(6, 6) = des_r.q;
         des_lr.qdot.segment(6, 6) = des_r.qdot;
         des_lr.qddot.segment(6, 6) = des_r.qddot;
+        return des_lr;
     }
 
     /* 5) Task-Space Trajectory : (t, Tₛ, Tₑ, T0, Tf) → (T, V, V̇, p, ξ, …) */
-    void taskSpaceTrajectory(double t_sec,
-                             const Eigen::Matrix4d &T_start,
-                             const Eigen::Matrix4d &T_end,
-                             double T0,
-                             double Tf,
-                             Des &des);
-  /**
-     * @brief H∞ controller에 기반한 joint torque 계산
-     * 
-     * 내부적으로 `HinfController_step()` 을 호출하며, 선형 피드백 게인 K를 인자로 받습니다.
-     * 입력은 ID 결과 (`this->lr`)와 현재 q, qdot, des_lr 를 기반으로 합니다.
-     * @f$\tau = M \qddot_{ref} + c(q,qdot_{ref})+g +tau_ref@f$
-     * 
-     * @param q     현재 관절각 (12×1)
-     * @param qdot  현재 관절속도 (12×1)
-     * @param K     H∞ 피드백 게인 (12×1)
-     * @return 토크 출력 τ (12×1)
-     */
-    Eigen::VectorXd hinfController(
-        const Eigen::VectorXd& q,
-        const Eigen::VectorXd& qdot,
-        const Eigen::VectorXd& K, const double &dt,Eigen::VectorXd &eint);
-        Eigen::VectorXd hinfControllerNom(
-            const Eigen::VectorXd& q_nom,
-            const Eigen::VectorXd& qdot_nom,
-            const Eigen::VectorXd& K_nom,
-            Eigen::VectorXd& eint,double dt);
+    Des taskSpaceTrajectory(double               t_sec,
+        const Eigen::Matrix4d& T_start,
+        const Eigen::Matrix4d& T_end,
+        double               T0,
+        double               Tf);
+ 
     /**
      * @brief Task-space controller (SPD + QP) 기반 토크 계산
      * 
@@ -256,15 +245,26 @@ Eigen::Matrix<double, 12, 1> qdot_max;   //!< 속도 상한 [rad/s]
      * @return 토크 출력 τ (12×1)
      */
     Eigen::VectorXd taskSpaceController(
-        const Eigen::VectorXd &q,
-        const Eigen::VectorXd &qdot,
-        double dt,
-        const Eigen::VectorXd &TaskKp,
-        const Eigen::VectorXd &TaskKv,
-        const Eigen::Vector2d &b0,
-        const Eigen::Vector2d &a,
-        const Eigen::VectorXd &HinfK);
+        const Arm l,
+        const Arm r,
+        const RelArm lr,
+        const Eigen::VectorXd&               q,
+        const Eigen::VectorXd&               qdot,
+        const Des &des_l,
+        const Des &des_r,
+        double                               dt,
+        const Eigen::VectorXd&               TaskKp    ,
+        const Eigen::VectorXd&               TaskKv    ,
+        const Eigen::Vector2d&               b0         ,
+        const Eigen::Vector2d&               a      ,
+        const Eigen::VectorXd&               HinfK );
 
+        Eigen::MatrixXd MassMatrix(const Eigen::VectorXd &q);
+        Eigen::VectorXd GravityForces(const Eigen::VectorXd& q);
+        Eigen::MatrixXd CoriolisMatrix(const Eigen::VectorXd& q,const Eigen::VectorXd& qdot);
+        Eigen::MatrixXd MassMatrixInverse(const Eigen::VectorXd& q);
+        Eigen::VectorXd HinfControl(const RelArm &lr,const Eigen::VectorXd q, const Eigen::VectorXd q_dot, const  RelDes &des, Eigen::VectorXd& e_int, double dt, const Eigen::VectorXd Hinf_K, const Eigen::VectorXd gamma);
+        Eigen::VectorXd HinfControl(const Arm &arm, const Eigen::VectorXd q, const Eigen::VectorXd q_dot, const  Des &des, Eigen::VectorXd& e_int, double dt, const Eigen::VectorXd Hinf_K, const Eigen::VectorXd gamma);
 private:
     /**
      * @brief Simulink 모듈을 전부 초기화합니다.
@@ -284,4 +284,7 @@ private:
      * @brief Joint position/velocity 상한/하한을 기본값(±π rad)으로 설정합니다.
      */
     void setMinMax();   ///< @internal 사용자 지정 initialize(q, qmin, qmax, …) 전용
+    void pinocchio_initialize(const std::string&  urdf_path);
+    struct Impl;
+    Impl* pimpl; 
 };

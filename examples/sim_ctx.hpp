@@ -13,7 +13,7 @@ struct SimCtx
     static constexpr double g_z      = -9.81;          // gravity
     static constexpr int    visHz    = 60;             // render rate (Hz)
 
-    explicit SimCtx(const char* urdfPath)
+    explicit SimCtx(const char* urdfPath,const char* vis_urdfPath)
     {
         if (!sim.connect(eCONNECT_GUI))
             throw std::runtime_error("Bullet GUI 연결 실패");
@@ -27,19 +27,29 @@ struct SimCtx
         b3RobotSimulatorLoadUrdfFileArgs arg;
         arg.m_flags |= URDF_USE_INERTIA_FROM_FILE | URDF_USE_SELF_COLLISION;
         int id = sim.loadURDF(urdfPath, arg);
+        int vis_id = sim.loadURDF(vis_urdfPath, arg);
+        
         robot  = std::make_unique<Robot>(&sim, id);
+        vis_robot  = std::make_unique<Robot>(&sim, vis_id);
+        
 
         spdlog::info("Bullet 초기화 완료 (URDF id = {})", id);
+        spdlog::info("Bullet 초기화 완료 (URDF vis_id = {})", vis_id);
+        
     }
 
     /* 60 Hz 마다 호출 → joint 갱신 & Bullet 1 step */
-    inline void render(const Eigen::VectorXd& q)
+    inline void render(const Eigen::VectorXd& q,const Eigen::VectorXd& q_vis)
     {
         robot->reset_q(q);
+        vis_robot->reset_q(q_vis);
+
         sim.stepSimulation();
     }
 
     b3RobotSimulatorClientAPI sim;     // 공개해도 무방
 private:
     std::unique_ptr<Robot>   robot;
+    std::unique_ptr<Robot>   vis_robot;
+    
 };
