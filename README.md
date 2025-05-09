@@ -24,4 +24,9 @@ make -j32
 ```bash
 cd slx
 ./start_codegeneration.sh
+cd ../codegen
+python3 codegen_setup.py
+cd ../build
+cmake ..
+make -j32
 ```
