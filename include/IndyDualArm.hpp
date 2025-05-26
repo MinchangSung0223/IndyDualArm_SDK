@@ -25,7 +25,7 @@ class IndyDualArm
 public:
 IndyDualArm();
 ~IndyDualArm();
-
+Eigen::Matrix4d X_start=Eigen::Matrix4d::Identity();
     /**
  * @brief   단일 팔(6-DoF) 동역학/기구학 결과 구조체
  *
@@ -271,6 +271,55 @@ Eigen::Matrix<double, 12, 1> qdot_max;   //!< 속도 상한 [rad/s]
         Eigen::MatrixXd MassMatrixInverse(const Eigen::VectorXd& q);
         Eigen::VectorXd HinfControl(const RelArm &lr,const Eigen::VectorXd q, const Eigen::VectorXd q_dot, const  RelDes &des, Eigen::VectorXd& e_int, double dt, const Eigen::VectorXd Hinf_K, const Eigen::VectorXd gamma);
         Eigen::VectorXd HinfControl(const Arm &arm, const Eigen::VectorXd q, const Eigen::VectorXd q_dot, const  Des &des, Eigen::VectorXd& e_int, double dt, const Eigen::VectorXd Hinf_K, const Eigen::VectorXd gamma);
+        Eigen::Matrix4d exp6(const Vector6d &lambda);
+        Vector6d log6(const  Eigen::Matrix4d &T);
+        Eigen::MatrixXd dexp6(const Vector6d &lambda);
+        Eigen::MatrixXd ddexp6(const Vector6d &lambda,const Vector6d &lambdadot);
+        Eigen::MatrixXd dddexp6(const Vector6d &lambda,const Vector6d &lambdadot,const Vector6d &lambdaddot);
+        Eigen::MatrixXd dexp3(const Eigen::Vector3d &xi);
+        Eigen::MatrixXd ddexp3(const Eigen::Vector3d &xi,const Eigen::Vector3d &xidot);
+        Eigen::MatrixXd dddexp3(const Eigen::Vector3d &xi,const Eigen::Vector3d &xidot,const Eigen::Vector3d &xiddot);
+        Eigen::MatrixXd dexp6inv(const Vector6d &lambda);
+        Eigen::MatrixXd ddexp6inv(const Vector6d &lambda,const Vector6d &lambdadot);
+        Eigen::MatrixXd dddexp6inv(const Vector6d &lambda,const Vector6d &lambdadot,const Vector6d &lambdaddot);
+        Eigen::MatrixXd dexp3inv(const Eigen::Vector3d &xi);
+        Eigen::MatrixXd ddexp3inv(const Eigen::Vector3d &xi,const Eigen::Vector3d &xidot);
+        Eigen::MatrixXd dddexp3inv(const Eigen::Vector3d &xi,const Eigen::Vector3d &xidot,const Eigen::Vector3d &xiddot);
+
+void SetLieTrajectory(
+    const Eigen::Matrix4d& X_start,
+    const Eigen::Matrix4d& X_end,
+    const Vector6d& V_start,
+    const Vector6d& V_end,
+    const Vector6d& Vdot_start,
+    const Vector6d& Vdot_end,
+    // const Vector6d& Vddot_start,
+    // const Vector6d& Vddot_end,  
+    const Vector6d& V_max,
+    const Vector6d& Vdot_max,
+    const Vector6d& Vddot_max,
+    double dt);
+IndyDualArm::Des GetLieTrajectory(double time);
+void LieScrewScurveTrajectory(const Eigen::Matrix4d X0,const Eigen::Matrix4d XT,const Vector6d V0,const Vector6d VT,const Vector6d dV0,const Vector6d dVT,Vector6d dlambda_max, Vector6d ddlambda_max,Vector6d dddlambda_max, double dt,std::vector<Eigen::Matrix4d>& T_des_list,std::vector<Vector6d>& V_des_list,std::vector<Vector6d>& V_des_dot_list,double& max_tt);
+void LieScrewScurveTrajectory(const Eigen::Matrix4d X0,
+    const Eigen::Matrix4d XT,
+    const Vector6d V0,
+    const Vector6d VT,
+    const Vector6d dV0,
+    const Vector6d dVT,
+    double p_max,
+    double pdot_max,
+    double pddot_max, 
+    double w_max, 
+    double wdot_max,
+    double wddot_max,  
+    double jerk_eta_max,
+    double jerk_xi_max,
+    double dt,
+    std::vector<Eigen::Matrix4d>& T_des_list,
+    std::vector<Vector6d>& V_des_list,
+    std::vector<Vector6d>& V_des_dot_list,
+    double& max_tt);
 private:
     /**
      * @brief Simulink 모듈을 전부 초기화합니다.

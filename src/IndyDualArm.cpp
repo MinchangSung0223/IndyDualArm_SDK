@@ -11,6 +11,8 @@
 #include "pinocchio/algorithm/rnea.hpp"
 #include "pinocchio/algorithm/crba.hpp"
 #include "pinocchio/algorithm/aba.hpp"
+#include <ruckig/ruckig.hpp>
+using namespace ruckig;
 #endif // pinocchio_header
 extern "C"
 {
@@ -23,7 +25,7 @@ extern "C"
 #include "TaskSpaceController.h"
 #include "FD_nom.h"
 #include "ID_nom.h"
-
+#include "LR.h"
 }
 
 #define COPY_TO(dst, src, n) std::memcpy((dst), (src), (n) * sizeof(double))
@@ -31,13 +33,22 @@ extern "C"
 struct IndyDualArm::Impl {
     pinocchio::Model model;
     pinocchio::Data  data;
-    // … 내부 멤버 …
+        double dt;
+
+    Ruckig<6> otg;  // control cycle
+    InputParameter<6> input;
+    OutputParameter<6> output;
+   Impl() 
+        : dt(0.001), otg(dt) // ✅ 초기화 리스트 사용
+    {
+        // 추가 초기화 코드가 있으면 여기에
+    }
 };
 void IndyDualArm::initModules_()
 {
     FD_initialize();
     FD_nom_initialize();
-    
+    LR_initialize();
     FK_initialize();
     ID_initialize();
     ID_nom_initialize();
@@ -55,18 +66,26 @@ void IndyDualArm::setMinMax(){
 }
 
 void IndyDualArm::setLambda(){
-        lambda_l<<  0,-0.111945470245711,-0.450000000000000,-0.232084291010446,-0.00722667581655122,-0.0911029490978083,6.11257062427590e-36,
-        -1.17357539658372,0.0246912114191473,0,0.181466898367024,-0.0447110760186115,0.0286221059600170,-2.25514051876985e-16,
-        0.993815552956183,0.243747835971880,-0.0305000000000000,0.141365128073726,0.145068226710239,0.174516399919260,0.0599999999999999,
-        -2.09100000000000,1.20917417943659,0,-1.20917417943659,1.20917417943659,-1.20917417943659,0,
-        0,1.20917417943659,0,-1.20905770917293,1.20917417943659,-1.20905770917293,0,
-        0,-1.20905770917293,0,1.20917417943659,-1.20905770917293,1.20917417943659,0;
-        lambda_r<<            0   ,  -0.11195  ,      -0.45  ,   -0.23208 ,  -0.0072267    ,-0.091103,  -2.5885e-20,
-                        1.1762    , 0.024691  , 1.7347e-18   ,   0.18147  ,  -0.044711     ,0.028622 ,  2.2551e-16,
-                        0.9923    ,  0.24375  ,    -0.0305   ,   0.14137  ,    0.14507     , 0.17452 ,        0.06,
-                        2.091     ,  1.2092   ,1.0434e-16    ,  -1.2092   ,    1.2092      ,-1.2092  ,-1.8334e-16,
-                            0     ,  1.2092  ,-5.5908e-17    ,  -1.2091   ,    1.2092      ,-1.2091  ,-4.0658e-20,
-                            0     , -1.2091  , 1.3175e-17    ,   1.2092   ,   -1.2091      , 1.2092  ,          0;
+//         lambda_l<< 0.00731290617519740	,-0.112209643268792,	-0.448444666974966,	-0.234147674440613,	-0.00655333111792072,	-0.0910987264418007,	0.000734266081960586,
+// -0.468471605135988,	0.0253049384494602,	-0.00213555056392088,	0.178112574046688,	-0.0444084686750942,	0.0278335968117789,	0.00100927975706183,
+// 0.584550039568942,	0.245985088392615,	-0.0294093003973933,	0.140807962066561,	0.144840166190116,	0.173596536662667,	0.0589714283937366,
+// -2.08786077845327,	1.21135113727416,	0.00637692695353308,	-1.20451993849272,	1.21271647308494,	-1.20010955429783,	0.00708035443410816,
+// -0.000419897553542710,	1.21383312381251,	-0.000125029976757511,	-1.21233388351448,	1.20890045805052,	-1.21075155284052,	-0.00745878481106931,
+// 0.0169832813592034,	-1.20010117384431,	0.00391070634428324	,1.20682064118058,	-1.21527435018294,	1.19820866588080,	-0.0155294916452316;
+        
+        lambda_l<< 0,-0.1119,-0.4500,-0.2321,-0.0072,-0.0911, 0.0000,
+-0.4695, 0.0247,0, 0.1815,-0.0447, 0.0286,-0.0000,
+ 0.5827, 0.2437,-0.0305, 0.1414, 0.1451, 0.1745, 0.0600,
+-2.0910, 1.2092,0,-1.2092, 1.2092,-1.2092, 0.0000,
+0, 1.2092,0,-1.2092, 1.2092,-1.2092,-0.0000,
+0,-1.2092,0, 1.2092,-1.2092, 1.2092,0;
+
+        lambda_r<< 0,-0.1119,-0.4500,-0.2321,-0.0072,-0.0911, 0.0000,
+0.4695, 0.0247,0, 0.1815,-0.0447, 0.0286,-0.0000,
+0.5827, 0.2437,-0.0305, 0.1414, 0.1451, 0.1745, 0.0600,
+2.0910, 1.2092,0,-1.2092, 1.2092,-1.2092,-0.0000,
+0, 1.2092,0,-1.2092, 1.2092,-1.2092,-0.0000,
+0,-1.2092, 0.0000, 1.2092,-1.2092, 1.2092,0;
         lambda_lr<<-6.11257062427590e-36,0.0911029490978083,0.00722667581655122,0.232084291010446,0.450000000000000,0.111945470245711,0,-0.111945470245711,-0.450000000000000,-0.232084291010446,-0.00722667581655134,-0.0911029490978080,-2.58853268680914e-20,
         2.25514051876985e-16,-0.0286221059600170,0.0447110760186115,-0.181466898367024,0,-0.0246912114191473,0.541044112920571,0.0246912114191473,1.73472347597681e-18,0.181466898367023,-0.0447110760186111,0.0286221059600170,2.25514051876985e-16,
         -0.0599999999999999,-0.174516399919260,-0.145068226710239,-0.141365128073726,0.0305000000000000,-0.243747835971880,-0.00150453352734745,0.243747835971880,-0.0305000000000000,0.141365128073727,0.145068226710239,0.174516399919260,0.0600000000000000,
@@ -447,7 +466,211 @@ IndyDualArm::Des IndyDualArm::taskSpaceTrajectory(double               t_sec,
     COPY_TO(des.xiddot.data(), TSTraj_Y.xiddot_t, 3);
     return des;
 }
+	Eigen::Matrix4d TransInv(const Eigen::Matrix4d& T) {
+		Eigen::Matrix4d ret=Eigen::Matrix4d::Identity();
+		ret<<T(0,0), T(1,0), T(2,0), - T(0,0)*T(0,3) - T(1,0)*T(1,3) - T(2,0)*T(2,3),
+		 	 T(0,1), T(1,1), T(2,1), - T(0,1)*T(0,3) - T(1,1)*T(1,3) - T(2,1)*T(2,3), 
+			 T(0,2), T(1,2), T(2,2), - T(0,2)*T(0,3) - T(1,2)*T(1,3) - T(2,2)*T(2,3),
+			 0,0,0,1;
+		return ret;
+	}	
+Eigen::MatrixXd Ad(const Eigen::Matrix4d& T) {
+    Eigen::MatrixXd ad_ret = Eigen::MatrixXd::Zero(6,6);
+    ad_ret<<T(0,0),T(0,1),T(0,2),T(1,3)*T(2,0) - T(2,3)*T(1,0), T(1,3)*T(2,1) - T(2,3)*T(1,1), T(1,3)*T(2,2) - T(2,3)*T(1,2),
+            T(1,0),T(1,1),T(1,2),T(2,3)*T(0,0) - T(0,3)*T(2,0), T(2,3)*T(0,1) - T(0,3)*T(2,1), T(2,3)*T(0,2) - T(0,3)*T(2,2),
+            T(2,0),T(2,1),T(2,2),T(0,3)*T(1,0) - T(1,3)*T(0,0), T(0,3)*T(1,1) - T(1,3)*T(0,1), T(0,3)*T(1,2) - T(1,3)*T(0,2),
+            0,0,0,T(0,0),T(0,1),T(0,2),
+            0,0,0,T(1,0),T(1,1),T(1,2),
+            0,0,0,T(2,0),T(2,1),T(2,2);
+    return ad_ret;
+}
+void IndyDualArm::LieScrewScurveTrajectory(const Eigen::Matrix4d X0,const Eigen::Matrix4d XT,const Vector6d V0,const Vector6d VT,const Vector6d dV0,const Vector6d dVT,Vector6d dlambda_max, Vector6d ddlambda_max,Vector6d dddlambda_max, double dt,std::vector<Eigen::Matrix4d>& T_des_list,std::vector<Vector6d>& V_des_list,std::vector<Vector6d>& V_des_dot_list,double& max_tt){
+	Vector6d lambda_0,lambda_T,dlambda_0,dlambda_T,ddlambda_0,ddlambda_T,lambda_t,dlambda_t,ddlambda_t;
+	lambda_0 = Vector6d::Zero();
+	lambda_T = this->log6(TransInv(X0)*XT);
+    Eigen::MatrixXd Admat = Ad(TransInv(X0));
 
+	dlambda_0 = Admat*this->dexp6inv(-lambda_0)*V0;
+	dlambda_T = Admat*this->dexp6inv(-lambda_T)*VT;
+	ddlambda_0 = Admat*(this->dexp6inv(-lambda_0)*dV0+this->ddexp6inv(-lambda_0,-dlambda_0)*V0);
+	ddlambda_T = Admat*(this->dexp6inv(-lambda_T)*dVT+this->ddexp6inv(-lambda_T,-dlambda_T)*VT);
+	lambda_t=dlambda_t=ddlambda_t= Vector6d::Zero();
+
+
+    Ruckig<6> otg(dt);  // control cycle
+    InputParameter<6> input;
+    OutputParameter<6> output;
+    input.current_position = {lambda_0(0),lambda_0(1),lambda_0(2),lambda_0(3),lambda_0(4),lambda_0(5)};
+    input.current_velocity  = {dlambda_0(0),dlambda_0(1),dlambda_0(2),dlambda_0(3),dlambda_0(4),dlambda_0(5)};
+    input.current_acceleration  = {ddlambda_0(0),ddlambda_0(1),ddlambda_0(2),ddlambda_0(3),ddlambda_0(4),ddlambda_0(5)};
+
+    input.target_position = {lambda_T(0),lambda_T(1),lambda_T(2),lambda_T(3),lambda_T(4),lambda_T(5)};
+    input.target_velocity  = {dlambda_T(0),dlambda_T(1),dlambda_T(2),dlambda_T(3),dlambda_T(4),dlambda_T(5)};
+    input.target_acceleration = {ddlambda_T(0),ddlambda_T(1),ddlambda_T(2),ddlambda_T(3),ddlambda_T(4),ddlambda_T(5)};
+
+    input.max_velocity  = {dlambda_max(0),dlambda_max(1),dlambda_max(2),dlambda_max(3),dlambda_max(4),dlambda_max(5)};
+    input.max_acceleration  = {ddlambda_max(0),ddlambda_max(1),ddlambda_max(2),ddlambda_max(3),ddlambda_max(4),ddlambda_max(5)};
+    input.max_jerk  = {dddlambda_max(0),dddlambda_max(1),dddlambda_max(2),dddlambda_max(3),dddlambda_max(4),dddlambda_max(5)};
+    
+    while (otg.update(input, output) == Result::Working) {
+        // std::cout << output.time << " | " << join(output.new_position) << std::endl;
+         lambda_t <<output.new_position[0],output.new_position[1],output.new_position[2],output.new_position[3],output.new_position[4],output.new_position[5];
+         dlambda_t<<output.new_velocity[0],output.new_velocity[1],output.new_velocity[2],output.new_velocity[3],output.new_velocity[4],output.new_velocity[5];
+         ddlambda_t<<output.new_acceleration[0],output.new_acceleration[1],output.new_acceleration[2],output.new_acceleration[3],output.new_acceleration[4],output.new_acceleration[5];
+	    Vector6d V_des = this->dexp6(-lambda_t)*dlambda_t;
+	    Vector6d  V_des_dot =  this->dexp6(-lambda_t)*ddlambda_t+ this->ddexp6(-lambda_t,-dlambda_t)*dlambda_t;
+	    Eigen::Matrix4d T_des = X0*exp6(lambda_t);         
+         T_des_list.push_back(T_des);
+         V_des_list.push_back(Ad(X0)*V_des);
+         V_des_dot_list.push_back(Ad(X0)*V_des_dot);
+         max_tt = output.time;
+         output.pass_to_input(input);
+    }
+    
+
+}	
+
+void IndyDualArm::LieScrewScurveTrajectory(const Eigen::Matrix4d X0,
+    const Eigen::Matrix4d XT,
+    const Vector6d V0,
+    const Vector6d VT,
+    const Vector6d dV0,
+    const Vector6d dVT,
+    double p_max,
+    double pdot_max,
+    double pddot_max, 
+    double w_max, 
+    double wdot_max,
+    double wddot_max,  
+    double jerk_eta_max,
+    double jerk_xi_max,
+    double dt,
+    std::vector<Eigen::Matrix4d>& T_des_list,
+    std::vector<Vector6d>& V_des_list,
+    std::vector<Vector6d>& V_des_dot_list,
+    double& max_tt){
+	Vector6d lambda_0,lambda_T,dlambda_0,dlambda_T,ddlambda_0,ddlambda_T,lambda_t,dlambda_t,ddlambda_t;
+	lambda_0 = Vector6d::Zero();
+	lambda_T = this->log6(TransInv(X0)*XT);
+
+    Eigen::MatrixXd Admat = Ad(TransInv(X0));
+    double norm_p_T = (this->dexp3(lambda_T.segment(3,3))*lambda_T.segment(0,3)).norm();
+    if (norm_p_T>p_max) p_max = norm_p_T;
+    double xidot_max  = w_max;
+    double xiddot_max  = (wdot_max);
+    double xidddot_max  = (wddot_max);
+    double etadot_max = pdot_max;
+    double etaddot_max = pddot_max;
+     
+
+
+	dlambda_0 = Admat*this->dexp6inv(-lambda_0)*V0;
+	dlambda_T = Admat*this->dexp6inv(-lambda_T)*VT;
+	ddlambda_0 = Admat*(this->dexp6inv(-lambda_0)*dV0+this->ddexp6inv(-lambda_0,-dlambda_0)*V0);
+	ddlambda_T = Admat*(this->dexp6inv(-lambda_T)*dVT+this->ddexp6inv(-lambda_T,-dlambda_T)*VT);
+	lambda_t=dlambda_t=ddlambda_t= Vector6d::Zero();
+
+    
+
+    Ruckig<6> otg(dt);  // control cycle
+    InputParameter<6> input;
+    OutputParameter<6> output;
+    input.current_position = {lambda_0(0),lambda_0(1),lambda_0(2),lambda_0(3),lambda_0(4),lambda_0(5)};
+    input.current_velocity  = {dlambda_0(0),dlambda_0(1),dlambda_0(2),dlambda_0(3),dlambda_0(4),dlambda_0(5)};
+    input.current_acceleration  = {ddlambda_0(0),ddlambda_0(1),ddlambda_0(2),ddlambda_0(3),ddlambda_0(4),ddlambda_0(5)};
+
+    input.target_position = {lambda_T(0),lambda_T(1),lambda_T(2),lambda_T(3),lambda_T(4),lambda_T(5)};
+    input.target_velocity  = {dlambda_T(0),dlambda_T(1),dlambda_T(2),dlambda_T(3),dlambda_T(4),dlambda_T(5)};
+    input.target_acceleration = {ddlambda_T(0),ddlambda_T(1),ddlambda_T(2),ddlambda_T(3),ddlambda_T(4),ddlambda_T(5)};
+
+    input.max_velocity  = {etadot_max/sqrt(3),etadot_max/sqrt(3),etadot_max/sqrt(3),xidot_max/sqrt(3),xidot_max/sqrt(3),xidot_max/sqrt(3)};
+    input.max_acceleration  = {etaddot_max/sqrt(3),etaddot_max/sqrt(3),etaddot_max/sqrt(3),xiddot_max/sqrt(3),xiddot_max/sqrt(3),xiddot_max/sqrt(3)};
+    input.max_jerk  = {jerk_eta_max/sqrt(3),jerk_eta_max/sqrt(3),jerk_eta_max/sqrt(3),jerk_xi_max/sqrt(3),jerk_xi_max/sqrt(3),jerk_xi_max/sqrt(3)};
+    
+    while (otg.update(input, output) == Result::Working) {
+        // std::cout << output.time << " | " << join(output.new_position) << std::endl;
+         lambda_t <<output.new_position[0],output.new_position[1],output.new_position[2],output.new_position[3],output.new_position[4],output.new_position[5];
+         dlambda_t<<output.new_velocity[0],output.new_velocity[1],output.new_velocity[2],output.new_velocity[3],output.new_velocity[4],output.new_velocity[5];
+         ddlambda_t<<output.new_acceleration[0],output.new_acceleration[1],output.new_acceleration[2],output.new_acceleration[3],output.new_acceleration[4],output.new_acceleration[5];
+	    Vector6d V_des = this->dexp6(-lambda_t)*dlambda_t;
+	    Vector6d  V_des_dot =  this->dexp6(-lambda_t)*ddlambda_t+ this->ddexp6(-lambda_t,-dlambda_t)*dlambda_t;
+	    Eigen::Matrix4d T_des = X0*exp6(lambda_t);         
+         T_des_list.push_back(T_des);
+         V_des_list.push_back(Ad(X0)*V_des);
+         V_des_dot_list.push_back(Ad(X0)*V_des_dot);
+         max_tt = output.time;
+         output.pass_to_input(input);
+    }
+    
+
+}	
+
+
+void IndyDualArm::SetLieTrajectory(
+    const Eigen::Matrix4d& X_start,
+    const Eigen::Matrix4d& X_end,
+    const Vector6d& V_start,
+    const Vector6d& V_end,
+    const Vector6d& Vdot_start,
+    const Vector6d& Vdot_end,
+    // const Vector6d& Vddot_start,
+    // const Vector6d& Vddot_end,  
+    const Vector6d& V_max,
+    const Vector6d& Vdot_max,
+    const Vector6d& Vddot_max,
+    double dt)
+{
+     Vector6d lambda0 = Vector6d::Zero();
+     Vector6d lambdaT = this->log6(TransInv(X_start)*X_end);
+     Eigen::MatrixXd Admat = Ad(TransInv(X_start));
+Vector6d lambda_dot0 =Admat*this->dexp6inv(-lambda0)*V_start;
+Vector6d lambda_ddot0 =Admat*(this->dexp6inv(-lambda0)*Vdot_start+this->ddexp6inv(-lambda0,-lambda_dot0)*V_start);
+// Vector6d lambda_dddot0= Admat*(this->ddexp6inv(-lambda0,-lambda_dot0)*V_start+this->dexp6inv(-lambda0)*Vddot_start+this->dddexp6inv(-lambda0,-lambda_dot0,-lambda_ddot0)*Vdot_start+this->ddexp6inv(-lambda0,-lambda_dot0)*Vddot_start);
+Vector6d lambda_dotT = Admat*this->dexp6inv(-lambdaT)*V_end;
+Vector6d lambda_ddotT =Admat*(this->dexp6inv(-lambdaT)*Vdot_end+this->ddexp6inv(-lambdaT,-lambda_dotT)*V_end);
+// Vector6d lambda_dddotT=Admat*(this->dexp6inv(-lambdaT)*Vddot_end+2*this->ddexp6inv(-lambdaT,-lambda_dotT)*Vdot_end+this->dddexp6inv(-lambdaT,-lambda_dotT,-lambda_ddotT)*V_end);
+    // pimpl->otg = Ruckig(dt,6);   
+
+    Vector6d dlambda_max,ddlambda_max,dddlambda_max;
+    dlambda_max = V_max;
+    ddlambda_max=Vdot_max;
+    dddlambda_max=Vddot_max;
+    
+    this->X_start =X_start;
+  
+    pimpl->input.current_position = {lambda0(0),lambda0(1),lambda0(2),lambda0(3),lambda0(4),lambda0(5)};
+    pimpl->input.current_velocity  = {lambda_dot0(0),lambda_dot0(1),lambda_dot0(2),lambda_dot0(3),lambda_dot0(4),lambda_dot0(5)};
+    pimpl->input.current_acceleration  = {lambda_ddot0(0),lambda_ddot0(1),lambda_ddot0(2),lambda_ddot0(3),lambda_ddot0(4),lambda_ddot0(5)};
+
+    pimpl->input.target_position = {lambdaT(0),lambdaT(1),lambdaT(2),lambdaT(3),lambdaT(4),lambdaT(5)};
+    pimpl->input.target_velocity  = {lambda_dotT(0),lambda_dotT(1),lambda_dotT(2),lambda_dotT(3),lambda_dotT(4),lambda_dotT(5)};
+    pimpl->input.target_acceleration = {lambda_ddotT(0),lambda_ddotT(1),lambda_ddotT(2),lambda_ddotT(3),lambda_ddotT(4),lambda_ddotT(5)};
+
+    pimpl->input.max_velocity  = {dlambda_max(0),dlambda_max(1),dlambda_max(2),dlambda_max(3),dlambda_max(4),dlambda_max(5)};
+    pimpl->input.max_acceleration  = {ddlambda_max(0),ddlambda_max(1),ddlambda_max(2),ddlambda_max(3),ddlambda_max(4),ddlambda_max(5)};
+    pimpl->input.max_jerk  = {dddlambda_max(0),dddlambda_max(1),dddlambda_max(2),dddlambda_max(3),dddlambda_max(4),dddlambda_max(5)};
+}
+
+IndyDualArm::Des IndyDualArm::GetLieTrajectory(double time)
+{
+    IndyDualArm::Des des;
+    Vector6d lambda_t,lambda_dot_t,lambda_ddot_t;
+    lambda_t = Vector6d::Zero();
+    lambda_dot_t = Vector6d::Zero();
+    lambda_ddot_t = Vector6d::Zero();
+    
+    while(pimpl->otg.update(pimpl->input, pimpl->output) == Result::Working ){
+         lambda_t <<pimpl->output.new_position[0],pimpl->output.new_position[1],pimpl->output.new_position[2],pimpl->output.new_position[3],pimpl->output.new_position[4],pimpl->output.new_position[5];
+         lambda_dot_t<<pimpl->output.new_velocity[0],pimpl->output.new_velocity[1],pimpl->output.new_velocity[2],pimpl->output.new_velocity[3],pimpl->output.new_velocity[4],pimpl->output.new_velocity[5];
+         lambda_ddot_t<<pimpl->output.new_acceleration[0],pimpl->output.new_acceleration[1],pimpl->output.new_acceleration[2],pimpl->output.new_acceleration[3],pimpl->output.new_acceleration[4],pimpl->output.new_acceleration[5];
+    }
+    des.T =  this->X_start*this->exp6(lambda_t);
+    des.V = Ad(X_start)*(this->dexp6(-lambda_t)*lambda_dot_t);
+    des.Vdot = Ad(X_start)*(this->dexp6(-lambda_t)*lambda_ddot_t+ this->ddexp6(-lambda_t,-lambda_dot_t)*lambda_dot_t);
+    // des.Vddot = this->dexp6(-lambda_t)*lambda_dddot_t+2*this->ddexp6(-lambda_t,-lambda_dot_t)*lambda_ddot_t+this->dddexp6(-lambda_t,-lambda_dot_t,-lambda_ddot_t)*lambda_dot_t;
+
+    return des;
+}
 
 /* 전역 구조체는 codegen 헤더가 이미 선언
      extern ExtU_TaskSpaceController_T TaskSpaceController_U;
@@ -640,41 +863,264 @@ Eigen::VectorXd IndyDualArm::HinfControl(const IndyDualArm::Arm &arm, const Eige
     Eigen::VectorXd torq = Mmat * q_ddot_ref + C * q_dot_ref + G + (Hinf_K_gamma) * (e_dot + Hinf_Kv * e + Hinf_Kp * e_int);
     return torq;
 }
-// VectorXd LR_Control::GravityForces(JVec q_)
-// {
-//     JVec G = JVec::Zero();
-//     pinocchio::Data data(model);
-//     Eigen::VectorXd v = pinocchio::randomConfiguration(model);
-//     Eigen::VectorXd a = Eigen::VectorXd::Zero(model.nv);
-//     Eigen::VectorXd q = pinocchio::randomConfiguration(model);
-//     q = q_;
-//     Eigen::VectorXd tau = pinocchio::rnea(model, data, q, v * 0, a * 0);
-//     pinocchio::computeGeneralizedGravity(model, data, q);
-//     G = data.g;
-//     return G;
-// }
 
-// Eigen::Matrix<double,12,12>  LR_Control::CoriolisMatrix(JVec q_, JVec q_dot)
-// {
-//     MatrixNd C = MatrixNd::Zero();
-//     pinocchio::Data data(model);
+Eigen::Matrix4d IndyDualArm::exp6(const Vector6d &lambda){
+    Eigen::Matrix4d T = Eigen::Matrix4d::Identity();
+    LR_U.exp6_lambda[0] = lambda(0);
+    LR_U.exp6_lambda[1] = lambda(1);
+    LR_U.exp6_lambda[2] = lambda(2);
+    LR_U.exp6_lambda[3] = lambda(3);
+    LR_U.exp6_lambda[4] = lambda(4);
+    LR_U.exp6_lambda[5] = lambda(5);
+    
+    LR_step();
+    int count = 0;
+    for(int j =0;j<4;j++)
+        for(int i =0;i<4;i++)
+            T(i,j)=LR_Y.exp6_T[count++];
+    return T;
+}
+Vector6d IndyDualArm::log6(const Eigen::Matrix4d &T){
+        Vector6d lambda;
+        lambda = Vector6d::Zero();
+   int count = 0;
+    for(int j =0;j<4;j++)
+        for(int i =0;i<4;i++)
+            LR_U.log6_T[count++]=T(i,j);
+    
+    LR_step();
+    for(int i= 0;i<6;i++)
+        lambda(i)=LR_Y.lambda[i].re;
+    return lambda;
+}
 
-//     Eigen::VectorXd v = pinocchio::randomConfiguration(model);
-//     Eigen::VectorXd a = Eigen::VectorXd::Zero(model.nv);
-//     Eigen::VectorXd q = pinocchio::randomConfiguration(model);
-//     q = q_;
-//     v = q_dot;
-//     Eigen::VectorXd tau = pinocchio::rnea(model, data, q, v, a);
-//     pinocchio::computeCoriolisMatrix(model, data, q, v);
-//     C = data.C;
-//     return C;
-// }
-// VectorXd LR_Control::ForwardDynamics(JVec q, JVec q_dot, JVec tau)
-// {
-//     pinocchio::Data data(model);
-//     JVec q_ddot = JVec::Zero();
-//     pinocchio::integrate(model, q, q_dot, tau);
-//     pinocchio::aba(model, data, q, q_dot, tau);
-//     q_ddot = data.ddq;
-//     return q_ddot;
-// }
+Eigen::MatrixXd IndyDualArm::dexp6(const Vector6d &lambda){
+    Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(6,6);
+    LR_U.dexp6_lambda[0] = lambda(0);
+    LR_U.dexp6_lambda[1] = lambda(1);
+    LR_U.dexp6_lambda[2] = lambda(2);
+    LR_U.dexp6_lambda[3] = lambda(3);
+    LR_U.dexp6_lambda[4] = lambda(4);
+    LR_U.dexp6_lambda[5] = lambda(5);
+    
+    LR_step();
+    int count = 0;
+    for(int j =0;j<6;j++)
+        for(int i =0;i<6;i++)
+            ret(i,j)=LR_Y.dexp6[count++];
+    return ret;
+}
+
+Eigen::MatrixXd IndyDualArm::ddexp6(const Vector6d &lambda,const Vector6d &lambdadot){
+    Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(6,6);
+    for(int i=0;i<6;i++){
+         LR_U.ddexp6_lambda[i] = lambda(i);
+         LR_U.ddexp6_lambdadot[i] = lambdadot(i);
+    }
+    LR_step();
+    int count = 0;
+    for(int j =0;j<6;j++)
+        for(int i =0;i<6;i++)
+            ret(i,j)=LR_Y.ddexp6[count++];
+    return ret;
+}
+
+Eigen::MatrixXd IndyDualArm::dddexp6(const Vector6d &lambda,const Vector6d &lambdadot,const Vector6d &lambdaddot){
+    Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(6,6);
+    for(int i=0;i<6;i++){
+         LR_U.dddexp6_lambda[i] = lambda(i);
+         LR_U.dddexp6_lambdadot[i] = lambdadot(i);
+        LR_U.dddexp6_lambdadot[i] = lambdaddot(i);
+    }
+    LR_step();
+    int count = 0;
+    for(int j =0;j<6;j++)
+        for(int i =0;i<6;i++)
+            ret(i,j)=LR_Y.dddexp6[count++];
+    return ret;
+}
+
+
+Eigen::MatrixXd IndyDualArm::dexp3(const Eigen::Vector3d &xi){
+    Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(3,3);
+    for(int i=0;i<3;i++){
+         LR_U.dexp3_xi[i] = xi(i);
+    }
+    LR_step();
+    int count = 0;
+    for(int j =0;j<3;j++)
+        for(int i =0;i<3;i++)
+            ret(i,j)=LR_Y.dexp3[count++];
+    return ret;
+}
+
+Eigen::MatrixXd IndyDualArm::ddexp3(const Eigen::Vector3d &xi,const Eigen::Vector3d &xidot){
+    Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(3,3);
+    for(int i=0;i<3;i++){
+         LR_U.ddexp3_xi[i] = xi(i);
+        LR_U.ddexp3_xidot[i] = xidot(i);
+
+    }
+    LR_step();
+    int count = 0;
+    for(int j =0;j<3;j++)
+        for(int i =0;i<3;i++)
+            ret(i,j)=LR_Y.ddexp3[count++];
+    return ret;
+}
+
+Eigen::MatrixXd IndyDualArm::dddexp3(const Eigen::Vector3d &xi,const Eigen::Vector3d &xidot,const Eigen::Vector3d &xiddot){
+    Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(3,3);
+    for(int i=0;i<3;i++){
+         LR_U.dddexp3_xi[i] = xi(i);
+        LR_U.dddexp3_xidot[i] = xidot(i);
+        LR_U.dddexp3_xidot[i] = xiddot(i);
+
+    }
+    LR_step();
+    int count = 0;
+    for(int j =0;j<3;j++)
+        for(int i =0;i<3;i++)
+            ret(i,j)=LR_Y.dddexp3[count++];
+    return ret;
+}
+
+
+Eigen::MatrixXd IndyDualArm::dexp6inv(const Vector6d &lambda){
+    Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(6,6);
+    LR_U.dexp6inv_lambda[0] = lambda(0);
+    LR_U.dexp6inv_lambda[1] = lambda(1);
+    LR_U.dexp6inv_lambda[2] = lambda(2);
+    LR_U.dexp6inv_lambda[3] = lambda(3);
+    LR_U.dexp6inv_lambda[4] = lambda(4);
+    LR_U.dexp6inv_lambda[5] = lambda(5);
+    
+    LR_step();
+    int count = 0;
+    for(int j =0;j<6;j++)
+        for(int i =0;i<6;i++)
+            ret(i,j)=LR_Y.dexp6inv[count++];
+    return ret;
+}
+
+Eigen::MatrixXd IndyDualArm::ddexp6inv(const Vector6d &lambda,const Vector6d &lambdadot){
+    Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(6,6);
+    for(int i=0;i<6;i++){
+         LR_U.ddexp6inv_lambda[i] = lambda(i);
+         LR_U.ddexp6inv_lambdadot[i] = lambdadot(i);
+    }
+    LR_step();
+    int count = 0;
+    for(int j =0;j<6;j++)
+        for(int i =0;i<6;i++)
+            ret(i,j)=LR_Y.ddexp6inv[count++];
+    return ret;
+}
+
+Eigen::MatrixXd IndyDualArm::dddexp6inv(const Vector6d &lambda,const Vector6d &lambdadot,const Vector6d &lambdaddot){
+    Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(6,6);
+    for(int i=0;i<6;i++){
+         LR_U.dddexp6inv_lambda[i] = lambda(i);
+         LR_U.dddexp6inv_lambdadot[i] = lambdadot(i);
+        LR_U.dddexp6inv_lambdadot[i] = lambdaddot(i);
+    }
+    LR_step();
+    int count = 0;
+    for(int j =0;j<6;j++)
+        for(int i =0;i<6;i++)
+            ret(i,j)=LR_Y.dddexp6inv[count++];
+    return ret;
+}
+
+
+Eigen::MatrixXd IndyDualArm::dexp3inv(const Eigen::Vector3d &xi){
+    Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(3,3);
+    for(int i=0;i<3;i++){
+         LR_U.dexp3inv_xi[i] = xi(i);
+    }
+    LR_step();
+    int count = 0;
+    for(int j =0;j<3;j++)
+        for(int i =0;i<3;i++)
+            ret(i,j)=LR_Y.dexp3inv[count++];
+    return ret;
+}
+
+Eigen::MatrixXd IndyDualArm::ddexp3inv(const Eigen::Vector3d &xi,const Eigen::Vector3d &xidot){
+    Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(3,3);
+    for(int i=0;i<3;i++){
+         LR_U.ddexp3inv_xi[i] = xi(i);
+        LR_U.ddexp3inv_xidot[i] = xidot(i);
+
+    }
+    LR_step();
+    int count = 0;
+    for(int j =0;j<3;j++)
+        for(int i =0;i<3;i++)
+            ret(i,j)=LR_Y.ddexp3inv[count++];
+    return ret;
+}
+
+Eigen::MatrixXd IndyDualArm::dddexp3inv(const Eigen::Vector3d &xi,const Eigen::Vector3d &xidot,const Eigen::Vector3d &xiddot){
+    Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(3,3);
+    for(int i=0;i<3;i++){
+         LR_U.dddexp3inv_xi[i] = xi(i);
+        LR_U.dddexp3inv_xidot[i] = xidot(i);
+        LR_U.dddexp3inv_xidot[i] = xiddot(i);
+
+    }
+    LR_step();
+    int count = 0;
+    for(int j =0;j<3;j++)
+        for(int i =0;i<3;i++)
+            ret(i,j)=LR_Y.dddexp3inv[count++];
+    return ret;
+}
+
+
+// typedef struct {
+//   real_T log6_T[16];                   /* '<Root>/log6_T' */
+//   real_T exp6_lambda[6];               /* '<Root>/exp6_lambda' */
+//   real_T dexp6_lambda[6];              /* '<Root>/dexp6_lambda' */
+//   real_T ddexp6_lambda[6];             /* '<Root>/ddexp6_lambda' */
+//   real_T ddexp6_lambdadot[6];          /* '<Root>/ddexp6_lambdadot' */
+//   real_T dddexp6_lambda[6];            /* '<Root>/dddexp6_lambda' */
+//   real_T dddexp6_lambdadot[6];         /* '<Root>/dddexp6_lambdadot' */
+//   real_T dddexp6_lambdaddot[6];        /* '<Root>/dddexp6_lambdaddot' */
+//   real_T dexp3_xi[3];                  /* '<Root>/dexp3_xi' */
+//   real_T ddexp3_xi[3];                 /* '<Root>/ddexp3_xi' */
+//   real_T ddexp3_xidot[3];              /* '<Root>/ddexp3_xidot' */
+//   real_T dddexp3_xi[3];                /* '<Root>/dddexp3_xi' */
+//   real_T dddexp3_xidot[3];             /* '<Root>/dddexp3_xidot' */
+//   real_T dddexp3_xiddot[3];            /* '<Root>/dddexp3_xiddot' */
+//   real_T dexp3inv_xi[6];               /* '<Root>/dexp3inv_xi' */
+//   real_T ddexp3inv_xi[3];              /* '<Root>/ddexp3inv_xi' */
+//   real_T ddexp3inv_xidot[3];           /* '<Root>/ddexp3inv_xidot' */
+//   real_T dddexp3inv_xi[3];             /* '<Root>/dddexp3inv_xi' */
+//   real_T dddexp3inv_xidot[3];          /* '<Root>/dddexp3inv_xidot' */
+//   real_T dddexp3inv_xiddot[3];         /* '<Root>/dddexp3inv_xiddot' */
+//   real_T dexp6inv_lambda[6];           /* '<Root>/dexp6inv_lambda' */
+//   real_T ddexp6inv_lambda[6];          /* '<Root>/ddexp6inv_lambda' */
+//   real_T ddexp6inv_lambdadot[6];       /* '<Root>/ddexp6inv_lambdadot' */
+//   real_T dddexp6inv_lambda[6];         /* '<Root>/dddexp6inv_lambda' */
+//   real_T dddexp6inv_lambdadot[6];      /* '<Root>/dddexp6inv_lambdadot' */
+//   real_T dddexp6inv_lambdaddot[6];     /* '<Root>/dddexp6inv_lambdaddot' */
+// } ExtU_LR_T;
+
+// /* External outputs (root outports fed by signals with default storage) */
+// typedef struct {
+//   real_T log6_lambda[6];              /* '<Root>/log6_lambda' */
+//   real_T exp6_T[16];                   /* '<Root>/exp6_T' */
+//   real_T dexp6[36];                    /* '<Root>/dexp6' */
+//   real_T ddexp6[36];                   /* '<Root>/ddexp6' */
+//   real_T dddexp6[36];                  /* '<Root>/dddexp6' */
+//   real_T dexp3[9];                     /* '<Root>/dexp3' */
+//   real_T ddexp3[9];                    /* '<Root>/ddexp3' */
+//   real_T dddexp3[9];                   /* '<Root>/dddexp3' */
+//   real_T dexp3inv[9];                  /* '<Root>/dexp3inv' */
+//   real_T ddexp3inv[9];                 /* '<Root>/ddexp3inv' */
+//   real_T dddexp3inv[9];                /* '<Root>/dddexp3inv' */
+//   real_T dexp6inv[36];                 /* '<Root>/dexp6inv' */
+//   real_T ddexp6inv[36];                /* '<Root>/ddexp6inv' */
+//   real_T dddexp6inv[36];               /* '<Root>/dddexp6inv' */
+// } ExtY_LR_T;

@@ -1,8 +1,4 @@
 function lambda = log6(T)
-    % [R,p] = TransToRp(T);
-    % xi = log3(T(1:3,1:3));
-    % eta = dlog3(xi)*p;
-    % lambda = [eta;xi];
-
-    lambda = se3ToVec(MatrixLog6(T));
+    se3mat = logm(T);
+    lambda = [se3mat(1: 3, 4);se3mat(3, 2); se3mat(1, 3); se3mat(2, 1)];
 end

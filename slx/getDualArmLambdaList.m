@@ -28,3 +28,4 @@ lambda_l_list=[lambda_l_list,se3ToVec(logm(getTransform(robot,q,"l_4","l_3")))];
 lambda_l_list=[lambda_l_list,se3ToVec(logm(getTransform(robot,q,"l_5","l_4")))];
 lambda_l_list=[lambda_l_list,se3ToVec(logm(getTransform(robot,q,"l_6","l_5")))];
 lambda_l_list=[lambda_l_list,se3ToVec(logm(getTransform(robot,q,"l_tcp","l_6")))];
+

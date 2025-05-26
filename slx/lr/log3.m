@@ -1,31 +1,5 @@
 function xi = log3(R)
-        % 
-        % A = R+R';
-        % B = R-R';
-        % normB = norm(B);
-        % b = [B(3, 2)./normB; B(1, 3)./normB; B(2, 1)./normB];
-        % [U,E,V]=eig(A);
-        % xihat = U(:,end);
-        % normxi = acos((trace(R)-1)/2);
-        % if dot(xihat, b) < 0
-        %     xi = -xihat*normxi;
-        %     return;
-        % else
-        %     xi = xihat*normxi;
-        %     return;
-        % end
-        % 
-        % 
-        xihat=so3ToVec(R-R');
-        if norm(xihat)<eps
-            xi = xihat;
-            return 
-        end
-        xihat = xihat/norm(xihat);
-        normxi = acos((trace(R)-1)/2);
-        xi = normxi*xihat;
-
-        
+        xi=so3ToVec(logm(R));
 
 end
 

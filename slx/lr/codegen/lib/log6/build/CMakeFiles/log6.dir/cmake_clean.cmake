@@ -1,0 +1,42 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/log6.dir/atanh.cpp.o"
+  "CMakeFiles/log6.dir/checkCondition.cpp.o"
+  "CMakeFiles/log6.dir/eigStandard.cpp.o"
+  "CMakeFiles/log6.dir/insertionsort.cpp.o"
+  "CMakeFiles/log6.dir/log.cpp.o"
+  "CMakeFiles/log6.dir/log6.cpp.o"
+  "CMakeFiles/log6.dir/log6_initialize.cpp.o"
+  "CMakeFiles/log6.dir/log6_rtwutil.cpp.o"
+  "CMakeFiles/log6.dir/log6_terminate.cpp.o"
+  "CMakeFiles/log6.dir/logm.cpp.o"
+  "CMakeFiles/log6.dir/norm.cpp.o"
+  "CMakeFiles/log6.dir/ordeig.cpp.o"
+  "CMakeFiles/log6.dir/power.cpp.o"
+  "CMakeFiles/log6.dir/rtGetInf.cpp.o"
+  "CMakeFiles/log6.dir/rtGetNaN.cpp.o"
+  "CMakeFiles/log6.dir/rt_nonfinite.cpp.o"
+  "CMakeFiles/log6.dir/schur.cpp.o"
+  "CMakeFiles/log6.dir/sqrt.cpp.o"
+  "CMakeFiles/log6.dir/sqrtObo.cpp.o"
+  "CMakeFiles/log6.dir/sqrtm2by2.cpp.o"
+  "CMakeFiles/log6.dir/sqrtmTri.cpp.o"
+  "CMakeFiles/log6.dir/sylvesterRecursive.cpp.o"
+  "CMakeFiles/log6.dir/xdlaev2.cpp.o"
+  "CMakeFiles/log6.dir/xdlahqr.cpp.o"
+  "CMakeFiles/log6.dir/xdlanv2.cpp.o"
+  "CMakeFiles/log6.dir/xdsterf.cpp.o"
+  "CMakeFiles/log6.dir/xgetrf.cpp.o"
+  "CMakeFiles/log6.dir/xhseqr.cpp.o"
+  "CMakeFiles/log6.dir/xnrm2.cpp.o"
+  "CMakeFiles/log6.dir/xzgehrd.cpp.o"
+  "CMakeFiles/log6.dir/xzlarf.cpp.o"
+  "CMakeFiles/log6.dir/xzlarfg.cpp.o"
+  "CMakeFiles/log6.dir/xzlascl.cpp.o"
+  "codegen/lib/log6/log6.a"
+  "codegen/lib/log6/log6.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/log6.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

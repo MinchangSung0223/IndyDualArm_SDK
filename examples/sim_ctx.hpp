@@ -22,16 +22,19 @@ struct SimCtx
         sim.setGravity(btVector3(0,0,g_z));
         sim.configureDebugVisualizer(COV_ENABLE_GUI, 0);
         sim.configureDebugVisualizer( COV_ENABLE_SHADOWS, 0);
-        btVector3 targetPos(0.01,-0.01,0.99);
-        sim.resetDebugVisualizerCamera(1.30, -25.8, 90.20, targetPos);
+        btVector3 targetPos(0.00,-0.00,0.5);
+        sim.resetDebugVisualizerCamera(1.60, -0, 90, targetPos);
         b3RobotSimulatorLoadUrdfFileArgs arg;
         arg.m_flags |= URDF_USE_INERTIA_FROM_FILE | URDF_USE_SELF_COLLISION;
         int id = sim.loadURDF(urdfPath, arg);
         int vis_id = sim.loadURDF(vis_urdfPath, arg);
-        
+         axis_id_l = sim.loadURDF("../indy7/axis_100mm.urdf", arg);
+axis_id_r = sim.loadURDF("../indy7/axis_100mm.urdf", arg);
+        axis_id_des_l = sim.loadURDF("../indy7/axis_100mm.urdf", arg);
+        axis_id_des_r = sim.loadURDF("../indy7/axis_100mm.urdf", arg);
         robot  = std::make_unique<Robot>(&sim, id);
         vis_robot  = std::make_unique<Robot>(&sim, vis_id);
-        
+        robot->draw_eef_T(1,1);
 
         spdlog::info("Bullet 초기화 완료 (URDF id = {})", id);
         spdlog::info("Bullet 초기화 완료 (URDF vis_id = {})", vis_id);
@@ -46,10 +49,35 @@ struct SimCtx
 
         sim.stepSimulation();
     }
-
+     inline void setAxis(const Eigen::Matrix4d& T_l,const Eigen::Matrix4d& T_r)
+    {
+        btMatrix3x3 R_l(T_l(0,0),T_l(0,1),T_l(0,2),T_l(1,0),T_l(1,1),T_l(1,2),T_l(2,0),T_l(2,1),T_l(2,2));
+		btQuaternion ret_quat_l;
+		R_l.getRotation(ret_quat_l);
+		sim.resetBasePositionAndOrientation(axis_id_l,btVector3(T_l(0,3),T_l(1,3),T_l(2,3)),ret_quat_l);
+         btMatrix3x3 R_r(T_r(0,0),T_r(0,1),T_r(0,2),T_r(1,0),T_r(1,1),T_r(1,2),T_r(2,0),T_r(2,1),T_r(2,2));
+		btQuaternion ret_quat_r;
+		R_r.getRotation(ret_quat_r);
+		sim.resetBasePositionAndOrientation(axis_id_r,btVector3(T_r(0,3),T_r(1,3),T_r(2,3)),ret_quat_r);
+    }
+    inline void setDesAxis(const Eigen::Matrix4d& T_l,const Eigen::Matrix4d& T_r)
+    {
+        btMatrix3x3 R_l(T_l(0,0),T_l(0,1),T_l(0,2),T_l(1,0),T_l(1,1),T_l(1,2),T_l(2,0),T_l(2,1),T_l(2,2));
+		btQuaternion ret_quat_l;
+		R_l.getRotation(ret_quat_l);
+		sim.resetBasePositionAndOrientation(axis_id_des_l,btVector3(T_l(0,3),T_l(1,3),T_l(2,3)),ret_quat_l);
+         btMatrix3x3 R_r(T_r(0,0),T_r(0,1),T_r(0,2),T_r(1,0),T_r(1,1),T_r(1,2),T_r(2,0),T_r(2,1),T_r(2,2));
+		btQuaternion ret_quat_r;
+		R_r.getRotation(ret_quat_r);
+		sim.resetBasePositionAndOrientation(axis_id_des_r,btVector3(T_r(0,3),T_r(1,3),T_r(2,3)),ret_quat_r);
+    }
     b3RobotSimulatorClientAPI sim;     // 공개해도 무방
 private:
     std::unique_ptr<Robot>   robot;
     std::unique_ptr<Robot>   vis_robot;
+    int axis_id_r;
+    int axis_id_l;
+    int axis_id_des_r;
+    int axis_id_des_l;
     
 };

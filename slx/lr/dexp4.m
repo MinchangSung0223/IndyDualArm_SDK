@@ -21,7 +21,6 @@ else
     Omega_2 = (theta-sin(theta))/theta^3;
     Gamma_1 = (theta-sin(theta))/theta^3;
     Gamma_2 = (2*cos(theta)-2+theta^2)/(2*theta^4);
-    
     Gamma_3 = (theta*cos(theta)+2*theta-3*sin(theta))/theta^5;
     Gamma_4 = (-6*cos(theta)-2*theta*sin(theta)-theta*theta+6)/(2*theta^4);
 end

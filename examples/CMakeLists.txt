@@ -18,12 +18,17 @@ endif()
 
 find_package(Eigen3 REQUIRED)
 find_package(Bullet REQUIRED)
+find_package(ruckig REQUIRED)
+find_package(pinocchio REQUIRED)
 
+find_package(LR REQUIRED)
 add_executable(test_dualarm main.cpp ${RobotSimulator_SRCS} Robot.cpp)
 target_link_libraries(test_dualarm PRIVATE 
 IndyDualArm 
 Eigen3::Eigen
  ${BULLET_LIBRARIES} 
+LR::Control
+LR::Trajectory
   )
 
 target_include_directories(test_dualarm PUBLIC 

@@ -14,7 +14,7 @@
 			<inertia ixx="+0.00572623" iyy="+0.00558959" izz="+0.00966674" ixy="+0.00000251" iyz="-0.00000014" ixz="-0.00011380"/>
 		</inertial>
 		<visual>
-			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<origin rpy="0 0 0" xyz="0 0 -0.6759"/>
 			<geometry>
 				<mesh filename="meshes/dual_arm_body.stl"/>
 			</geometry>
@@ -287,13 +287,13 @@
 		<child link="body"/>
  	</joint>
 		<joint name="l_body_fixed" type="fixed">
- 		<origin rpy="-2.091 0 0" xyz="0 0.1551 1.2924"/>
+ 		<origin rpy="-2.091 0 0" xyz="0 0.1551 0.61651"/>
 		<axis xyz="0 0 1"/>
  		<parent link="body"/>
 		<child link="l_0"/>
  	</joint> 	 
  	<joint name="r_body_fixed" type="fixed">   
- 		<origin rpy=" 2.091 0 0" xyz="0 -0.1551 1.2924"/>
+ 		<origin rpy=" 2.091 0 0" xyz="0 -0.1551 0.61651"/>
 		<axis xyz="0 0 1"/>
  		<parent link="body"/>
 		<child link="r_0"/>
