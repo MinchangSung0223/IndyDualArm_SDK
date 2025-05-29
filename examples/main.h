@@ -272,7 +272,7 @@ Eigen::VectorXd SPDEC(const Eigen::MatrixXd &M,
     // Pose & velocity errors in exponential coordinates
     // ---------------------------------------------------------------------
     const Matrix4d T_tilde = TransInv(T) * T_d;            // current → desired
-    const Vector6d lambda = se3ToVec(MatrixLog6(T_tilde)); // pose error
+    const Vector6d lambda = arm.log6(T_tilde); // pose error
 
     const Matrix6d AdTilde = Ad(T_tilde);
 
@@ -303,10 +303,9 @@ Eigen::VectorXd SPDEC(const Eigen::MatrixXd &M,
     // ---------------------------------------------------------------------
     // Joint‑space acceleration command
     // ---------------------------------------------------------------------
-    const Eigen::MatrixXd A = M + J.transpose() * D.transpose() * Kd_mat * dt * D * J;
-
+    const Eigen::MatrixXd A = M + J.transpose() * Dinv.transpose() * Kd_mat * dt * D * J;
     const Eigen::VectorXd rhs =
-        J.transpose() * D.transpose() * (Kp_mat*lambda+ast1*Vdot_d+ast2*V_d+ast3*J*qdot) - B * qdot - C * qdot;
+        J.transpose() * Dinv.transpose() * (Kp_mat*lambda+ast1*Vdot_d+ast2*V_d+ast3*J*qdot) - B * qdot - C * qdot;
 
     // Use a robust solver (LDLT assumes M ≻ 0) --------------------------------
     return A.ldlt().solve(rhs);
@@ -368,6 +367,6 @@ Eigen::VectorXd  PDEC(const Eigen::MatrixXd &B,
      const Matrix6d Kp_mat = Kp.asDiagonal();
     const Matrix6d Kd_mat = Kd.asDiagonal();
     VectorXd tau(6);
-    tau = J.transpose() * D.transpose() * (Kp_mat*lambda+Kd_mat*lambdadot)- B * qdot;
+    tau = J.transpose() * Dinv.transpose() * (Kp_mat*lambda+Kd_mat*lambdadot)- B * qdot;
     return tau;
 }

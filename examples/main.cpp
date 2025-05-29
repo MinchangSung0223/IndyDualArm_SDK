@@ -151,11 +151,12 @@ int main()
     
 
     // SPDECKp << 100000, 100000, 100000, 1000, 1000, 1000;
-    SPDECKp << 1000000, 1000000, 1000000, 3000, 3000, 3000;
+    SPDECKp << 100000, 100000, 100000, 100000, 100000,100000;
 
     VectorXd Ka = VectorXd::Zero(12);
     Ka<<100,100,50,30,10,0.1,100,100,50,30,10,0.1;
-    SPDECKd<< 1000000*dt*30, 1000000*dt*30, 1000000*dt*30, 3000*dt*30, 3000*dt*30, 3000*dt*30;
+    // Ka = Ka*0.01;
+    SPDECKd<< 100000*dt*30, 100000*dt*30, 100000*dt*30, 100000*dt*100, 100000*dt*100, 100000*dt*100;
     MatrixXd N=MatrixXd::Zero(12,12);
     N.block<3,3>(0,0) = MatrixXd::Identity(6,6);
     Matrix4d T_start_r,T_end_r,T_end_r2;
@@ -207,6 +208,9 @@ int main()
         }
         else if(t>=15&& t<20){
             task_des_r = arm.taskSpaceTrajectory(t, T_end_r2, T_start_r,15, 20);
+             task_des_lr = arm.taskSpaceTrajectory(t, T_end_lr2, T_start_lr,15, 20);
+        }else{
+                 task_des_r = arm.taskSpaceTrajectory(t, T_end_r2, T_start_r,15, 20);
              task_des_lr = arm.taskSpaceTrajectory(t, T_end_lr2, T_start_lr,15, 20);
         }
         
@@ -261,9 +265,9 @@ int main()
         VectorXd qddot_nom(12);
         qddot_nom.segment(0,6) = qddot_nom_l;
         qddot_nom.segment(6,6) = qddot_nom_r;
-        
-        q_nom = q_nom+qdot_nom*dt;
         qdot_nom = qdot_nom+qddot_nom*dt;
+        q_nom = q_nom+qdot_nom*dt;
+        
 
         VectorXd tau_cr = PDEC(Bnomr,q_nom.segment(6, 6), qdot_nom.segment(6, 6),
                                     task_des_r.T, task_des_r.V, task_des_r.Vdot,nom_r.T,nom_r.J,nom_r.Jdot,
@@ -273,7 +277,7 @@ int main()
         //                             SPDECKp, SPDECKd, 0.001);
         VectorXd tau_cl = PDEC(Bnoml,q_nom.segment(0, 6), qdot_nom.segment(0, 6),
                                     task_des_lr.T, task_des_lr.V, task_des_lr.Vdot,nom_lr.T,(-1)*Ad(TransInv(nom_lr.T))*nom_l.J,(-1)*Ad(TransInv(nom_lr.T))*nom_l.Jdot-ad(Ad(TransInv(nom_lr.T))*nom_l.V-nom_r.V)*Ad(TransInv(nom_lr.T))*nom_l.J,
-                                    SPDECKp/10.0, SPDECKd/10.0, 0.001);
+                                    SPDECKp, SPDECKd, 0.001);
         VectorXd tau_c = VectorXd::Zero(12); 
         tau_c.segment(0,6) =tau_cl+ l.g;
         tau_c.segment(6,6) =tau_cr+ r.g;
@@ -287,17 +291,19 @@ int main()
             // saveState(q, qdot, tau_c + tau_a, t);
       
 
-        Vector6d lambda_l,lambdadot_l,lambda_lr,lambdadot_lr,lambda_r,lambdadot_r;
+        Vector6d lambda_l,lambdadot_l,lambda_lr,lambdadot_lr,lambda_r,lambdadot_r,lambda_nom_r,lambdadot_nom_r;
 
         computeLambda(l.T,l.V,task_des_l.T,task_des_l.V,task_des_l.Vdot ,lambda_l,lambdadot_l);
         computeLambda(lr_.T,lr_.V,task_des_lr.T,task_des_lr.V,task_des_lr.Vdot ,lambda_lr,lambdadot_lr);
         computeLambda(r.T,r.V,task_des_r.T,task_des_r.V,task_des_r.Vdot ,lambda_r,lambdadot_r);
-        
+        computeLambda(nom_r.T,nom_r.V,task_des_r.T,task_des_r.V,task_des_r.Vdot ,lambda_nom_r,lambdadot_nom_r);
+
         saveLambda("lambda_l.csv", lambda_l, lambdadot_l, t);
         saveLambda("lambda_r.csv", lambda_r, lambdadot_r, t);
         saveLambda("lambda_lr.csv", lambda_lr, lambdadot_lr, t);
 
-                std::cout<<lambda_r.transpose()<<std::endl;
+        std::cout<<"r:"<<lambda_r.transpose()<<std::endl;
+        std::cout<<"nom_r:"<<lambda_nom_r.transpose()<<std::endl;
 
         saveTaskSpace(l.T, r.T, l.V, r.V,  t);
         saveQ( q,  t);
@@ -359,7 +365,7 @@ int main()
         if (++visCnt >= visDiv)
         {
             ctx.render(q, q_nom);
-            ctx.setAxis(task_des_l.T,task_des_r.T);
+            ctx.setAxis(task_des_r.T*TransInv(task_des_lr.T),task_des_r.T);
             ctx.setDesAxis(l.T,r.T);
             visCnt = 0;
         }
